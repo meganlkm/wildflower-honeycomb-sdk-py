@@ -1,6 +1,7 @@
-
 __pycache__/
 
-_reports/
+wildflower_honeycomb\.egg-info/
 
-honeycomb\.egg-info/
+\.cache/v/cache/
+
+\.coverage
