@@ -65,7 +65,7 @@ class HoneycombMutation(Mutation):
         else:
             variables["datapoint"] = datapoint
         results = self.client.execute(query, variables, files)
-        if hasattr(results, "__getitem__"):
+        if hasattr(results, "get"):
             return Datapoint.from_json(results.get("createDatapoint"))
         else:
             print(results)
