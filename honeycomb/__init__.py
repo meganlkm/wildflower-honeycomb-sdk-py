@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from honeycomb.models import Query, Mutation, DatapointInput, Datapoint
 from gqlpycgen.client import FileUpload, Client
 
@@ -27,15 +29,9 @@ class HoneycombMutation(Mutation):
 
     def createDatapoint(self, datapoint: DatapointInput) -> Datapoint:
         variables = dict()
-        var_types = dict()
 
         if datapoint is None:
             raise Exception("datapoint is required")
-        var_types["datapoint"] = DatapointInput
-        if hasattr(datapoint, "to_json"):
-            variables["datapoint"] = datapoint.to_json()
-        else:
-            variables["datapoint"] = datapoint
 
         query = """mutation createDatapoint ($datapoint: DatapointInput) { createDatapoint(datapoint: $datapoint) {
     data_id
@@ -58,13 +54,15 @@ class HoneycombMutation(Mutation):
     }
 }
 """
-        print(query)
         files = FileUpload()
-        filename = datapoint.get("file", {}).get("data")
-        if filename is None:
-            raise Exception("filename not specified in datapoint.file.data")
-        # TODO - make this more robust
-        files.add_file("variables.datapoint.file.data", filename, open(filename, 'rb'), 'text/plain')
+        upload = datapoint.file
+        data = upload.data
+        filename = uuid4().hex
+        upload.data = filename
+        files.add_file("variables.datapoint.file.data", filename, data, upload.contentType)
+        if hasattr(datapoint, "to_json"):
+            variables["datapoint"] = datapoint.to_json()
+        else:
+            variables["datapoint"] = datapoint
         results = self.client.execute(query, variables, files)
-        print(results)
         return Datapoint.from_json(results.get("createDatapoint"))

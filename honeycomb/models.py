@@ -90,16 +90,17 @@ class DeviceList(ObjectBase):
 
 
 class Device(ObjectBase):
-    FIELDS = ["device_id", "part_number", "name", "tag_id", "description", "sensors", "system", ]
-    TYPES = {"device_id": "ID", "part_number": "String", "name": "String", "tag_id": "String", "description": "String", "sensors": "List[SensorInstallation]", "system": "System"}
+    FIELDS = ["device_id", "part_number", "name", "tag_id", "description", "sensors", "confgurations", "system", ]
+    TYPES = {"device_id": "ID", "part_number": "String", "name": "String", "tag_id": "String", "description": "String", "sensors": "List[SensorInstallation]", "confgurations": "List[DeviceConfiguration]", "system": "System"}
 
-    def __init__(self, device_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, tag_id: 'String'=None, description: 'String'=None, sensors: 'List[SensorInstallation]'=None, system: 'System'=None):
+    def __init__(self, device_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, tag_id: 'String'=None, description: 'String'=None, sensors: 'List[SensorInstallation]'=None, confgurations: 'List[DeviceConfiguration]'=None, system: 'System'=None):
         self.device_id = device_id
         self.part_number = part_number
         self.name = name
         self.tag_id = tag_id
         self.description = description
         self.sensors = sensors
+        self.confgurations = confgurations
         self.system = system
 
 
@@ -142,6 +143,19 @@ class Property(ObjectBase):
         self.name = name
         self.value = value
         self.type = type
+
+
+class DeviceConfiguration(ObjectBase):
+    FIELDS = ["device_configuration_id", "device", "start", "end", "properties", "system", ]
+    TYPES = {"device_configuration_id": "ID", "device": "Device", "start": "DateTime", "end": "DateTime", "properties": "List[Property]", "system": "System"}
+
+    def __init__(self, device_configuration_id: 'ID'=None, device: 'Device'=None, start: 'DateTime'=None, end: 'DateTime'=None, properties: 'List[Property]'=None, system: 'System'=None):
+        self.device_configuration_id = device_configuration_id
+        self.device = device
+        self.start = start
+        self.end = end
+        self.properties = properties
+        self.system = system
 
 
 class SensorList(ObjectBase):
@@ -214,9 +228,9 @@ class DatapointList(ObjectBase):
 
 class Datapoint(ObjectBase):
     FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "system", ]
-    TYPES = {"data_id": "ID", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String", "observed_time": "DateTime", "observer": "SensorInstallation", "system": "System"}
+    TYPES = {"data_id": "ID", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String", "observed_time": "DateTime", "observer": "Observer", "system": "System"}
 
-    def __init__(self, data_id: 'ID'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String'=None, observed_time: 'DateTime'=None, observer: 'SensorInstallation'=None, system: 'System'=None):
+    def __init__(self, data_id: 'ID'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String'=None, observed_time: 'DateTime'=None, observer: 'Observer'=None, system: 'System'=None):
         self.data_id = data_id
         self.parents = parents
         self.format = format
@@ -328,18 +342,6 @@ class ExtrinsicCalibration(ObjectBase):
         self.objects = objects
 
 
-class DeviceConfiguration(ObjectBase):
-    FIELDS = ["device_configuration_id", "device", "start", "end", "system", ]
-    TYPES = {"device_configuration_id": "ID", "device": "Device", "start": "DateTime", "end": "DateTime", "system": "System"}
-
-    def __init__(self, device_configuration_id: 'ID'=None, device: 'Device'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System'=None):
-        self.device_configuration_id = device_configuration_id
-        self.device = device
-        self.start = start
-        self.end = end
-        self.system = system
-
-
 class PaginationInput(ObjectBase):
     FIELDS = ["max", "cursor", ]
     TYPES = {"max": "Int", "cursor": "String"}
@@ -360,6 +362,27 @@ class DeviceInput(ObjectBase):
         self.tag_id = tag_id
 
 
+class DeviceConfigurationInput(ObjectBase):
+    FIELDS = ["device", "start", "end", "properties", ]
+    TYPES = {"device": "ID", "start": "DateTime", "end": "DateTime", "properties": "List[PropertyInput]"}
+
+    def __init__(self, device: 'ID'=None, start: 'DateTime'=None, end: 'DateTime'=None, properties: 'List[PropertyInput]'=None):
+        self.device = device
+        self.start = start
+        self.end = end
+        self.properties = properties
+
+
+class PropertyInput(ObjectBase):
+    FIELDS = ["name", "value", "type", ]
+    TYPES = {"name": "String", "value": "String", "type": "PropertyType"}
+
+    def __init__(self, name: 'String'=None, value: 'String'=None, type: 'PropertyType'=None):
+        self.name = name
+        self.value = value
+        self.type = type
+
+
 class SensorInput(ObjectBase):
     FIELDS = ["part_number", "name", "description", "sensor_type", "version", "default_config", ]
     TYPES = {"part_number": "String", "name": "String", "description": "String", "sensor_type": "SensorType", "version": "Int", "default_config": "List[PropertyInput]"}
@@ -371,16 +394,6 @@ class SensorInput(ObjectBase):
         self.sensor_type = sensor_type
         self.version = version
         self.default_config = default_config
-
-
-class PropertyInput(ObjectBase):
-    FIELDS = ["name", "value", "type", ]
-    TYPES = {"name": "String", "value": "String", "type": "PropertyType"}
-
-    def __init__(self, name: 'String'=None, value: 'String'=None, type: 'PropertyType'=None):
-        self.name = name
-        self.value = value
-        self.type = type
 
 
 class SensorInstallationInput(ObjectBase):
@@ -502,6 +515,7 @@ class PersonInput(ObjectBase):
 
 
 Assignable = Union[Device, Person]
+Observer = Union[Assignment, SensorInstallation]
 GeometricObject = Union[SensorInstallation, CoordinateSpace]
 
 
@@ -761,6 +775,22 @@ class Mutation(MutationBase):
         query = self.prepare(Device, "createDevice", variables, var_types)
         results = self.query(query, variables)
         return Device.from_json(results.get("createDevice"))
+
+    def setDeviceConfiguration(self, deviceConfiguration: 'DeviceConfigurationInput'=None) -> DeviceConfiguration:
+        args = ["deviceConfiguration: 'DeviceConfigurationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if deviceConfiguration is not None:
+            var_types["deviceConfiguration"] = DeviceConfigurationInput
+            if hasattr(deviceConfiguration, "to_json"):
+                variables["deviceConfiguration"] = deviceConfiguration.to_json()
+            else:
+                variables["deviceConfiguration"] = deviceConfiguration
+
+        query = self.prepare(DeviceConfiguration, "setDeviceConfiguration", variables, var_types)
+        results = self.query(query, variables)
+        return DeviceConfiguration.from_json(results.get("setDeviceConfiguration"))
 
     def createSensor(self, sensor: 'SensorInput'=None) -> Sensor:
         args = ["sensor: 'SensorInput'=None"]
