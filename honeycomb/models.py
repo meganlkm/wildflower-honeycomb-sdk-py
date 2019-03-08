@@ -14,6 +14,14 @@ Upload = NewType('Upload', str)
 DateTime = NewType('DateTime', str)
 
 
+class SortDirection(Enum):
+    ASC = "ASC"
+    DESC = "DESC"
+
+    def __str__(self):
+        return str(self.value)
+
+
 class SensorType(Enum):
     CAMERA = "CAMERA"
     RADIO = "RADIO"
@@ -54,6 +62,10 @@ class Operator(Enum):
     LIKE = "LIKE"
     RE = "RE"
     IN = "IN"
+    LT = "LT"
+    GT = "GT"
+    LTE = "LTE"
+    GTE = "GTE"
 
     def __str__(self):
         return str(self.value)
@@ -90,17 +102,17 @@ class DeviceList(ObjectBase):
 
 
 class Device(ObjectBase):
-    FIELDS = ["device_id", "part_number", "name", "tag_id", "description", "sensors", "confgurations", "system", ]
-    TYPES = {"device_id": "ID", "part_number": "String", "name": "String", "tag_id": "String", "description": "String", "sensors": "List[SensorInstallation]", "confgurations": "List[DeviceConfiguration]", "system": "System"}
+    FIELDS = ["device_id", "part_number", "name", "tag_id", "description", "sensors", "configurations", "system", ]
+    TYPES = {"device_id": "ID", "part_number": "String", "name": "String", "tag_id": "String", "description": "String", "sensors": "List[SensorInstallation]", "configurations": "List[DeviceConfiguration]", "system": "System"}
 
-    def __init__(self, device_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, tag_id: 'String'=None, description: 'String'=None, sensors: 'List[SensorInstallation]'=None, confgurations: 'List[DeviceConfiguration]'=None, system: 'System'=None):
+    def __init__(self, device_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, tag_id: 'String'=None, description: 'String'=None, sensors: 'List[SensorInstallation]'=None, configurations: 'List[DeviceConfiguration]'=None, system: 'System'=None):
         self.device_id = device_id
         self.part_number = part_number
         self.name = name
         self.tag_id = tag_id
         self.description = description
         self.sensors = sensors
-        self.confgurations = confgurations
+        self.configurations = configurations
         self.system = system
 
 
@@ -196,16 +208,17 @@ class Environment(ObjectBase):
 
 
 class Assignment(ObjectBase):
-    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "system", ]
-    TYPES = {"assignment_id": "ID", "environment": "Environment", "assigned": "Assignable", "assigned_type": "AssignableTypeEnum", "start": "DateTime", "end": "DateTime", "system": "System"}
+    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "data", "system", ]
+    TYPES = {"assignment_id": "ID", "environment": "Environment", "assigned": "Assignable", "assigned_type": "AssignableTypeEnum", "start": "DateTime", "end": "DateTime", "data": "List[Datapoint]", "system": "System"}
 
-    def __init__(self, assignment_id: 'ID'=None, environment: 'Environment'=None, assigned: 'Assignable'=None, assigned_type: 'AssignableTypeEnum'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System'=None):
+    def __init__(self, assignment_id: 'ID'=None, environment: 'Environment'=None, assigned: 'Assignable'=None, assigned_type: 'AssignableTypeEnum'=None, start: 'DateTime'=None, end: 'DateTime'=None, data: 'List[Datapoint]'=None, system: 'System'=None):
         self.assignment_id = assignment_id
         self.environment = environment
         self.assigned = assigned
         self.assigned_type = assigned_type
         self.start = start
         self.end = end
+        self.data = data
         self.system = system
 
 
@@ -216,14 +229,6 @@ class Person(ObjectBase):
     def __init__(self, person_id: 'ID'=None, name: 'String'=None):
         self.person_id = person_id
         self.name = name
-
-
-class DatapointList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[Datapoint]"}
-
-    def __init__(self, data: 'List[Datapoint]'=None):
-        self.data = data
 
 
 class Datapoint(ObjectBase):
@@ -258,15 +263,33 @@ class S3File(ObjectBase):
         self.created = created
 
 
-class PageInfo(ObjectBase):
-    FIELDS = ["total", "count", "max", "cursor", ]
-    TYPES = {"total": "Int", "count": "Int", "max": "Int", "cursor": "String"}
+class DatapointList(ObjectBase):
+    FIELDS = ["data", ]
+    TYPES = {"data": "List[Datapoint]"}
 
-    def __init__(self, total: 'Int'=None, count: 'Int'=None, max: 'Int'=None, cursor: 'String'=None):
+    def __init__(self, data: 'List[Datapoint]'=None):
+        self.data = data
+
+
+class Sort(ObjectBase):
+    FIELDS = ["field", "direction", ]
+    TYPES = {"field": "String", "direction": "SortDirection"}
+
+    def __init__(self, field: 'String'=None, direction: 'SortDirection'=None):
+        self.field = field
+        self.direction = direction
+
+
+class PageInfo(ObjectBase):
+    FIELDS = ["total", "count", "max", "cursor", "sort", ]
+    TYPES = {"total": "Int", "count": "Int", "max": "Int", "cursor": "String", "sort": "Sort"}
+
+    def __init__(self, total: 'Int'=None, count: 'Int'=None, max: 'Int'=None, cursor: 'String'=None, sort: 'Sort'=None):
         self.total = total
         self.count = count
         self.max = max
         self.cursor = cursor
+        self.sort = sort
 
 
 class System(ObjectBase):
@@ -343,12 +366,33 @@ class ExtrinsicCalibration(ObjectBase):
 
 
 class PaginationInput(ObjectBase):
-    FIELDS = ["max", "cursor", ]
-    TYPES = {"max": "Int", "cursor": "String"}
+    FIELDS = ["max", "cursor", "sort", ]
+    TYPES = {"max": "Int", "cursor": "String", "sort": "List[SortInput]"}
 
-    def __init__(self, max: 'Int'=None, cursor: 'String'=None):
+    def __init__(self, max: 'Int'=None, cursor: 'String'=None, sort: 'List[SortInput]'=None):
         self.max = max
         self.cursor = cursor
+        self.sort = sort
+
+
+class SortInput(ObjectBase):
+    FIELDS = ["field", "direction", ]
+    TYPES = {"field": "String", "direction": "SortDirection"}
+
+    def __init__(self, field: 'String'=None, direction: 'SortDirection'=None):
+        self.field = field
+        self.direction = direction
+
+
+class QueryExpression(ObjectBase):
+    FIELDS = ["field", "operator", "value", "children", ]
+    TYPES = {"field": "String", "operator": "Operator", "value": "String", "children": "List[QueryExpression]"}
+
+    def __init__(self, field: 'String'=None, operator: 'Operator'=None, value: 'String'=None, children: 'List[QueryExpression]'=None):
+        self.field = field
+        self.operator = operator
+        self.value = value
+        self.children = children
 
 
 class DeviceInput(ObjectBase):
@@ -444,6 +488,14 @@ class AssignmentInput(ObjectBase):
         self.end = end
 
 
+class AssignmentUpdateInput(ObjectBase):
+    FIELDS = ["end", ]
+    TYPES = {"end": "DateTime"}
+
+    def __init__(self, end: 'DateTime'=None):
+        self.end = end
+
+
 class DatapointInput(ObjectBase):
     FIELDS = ["format", "file", "observed_time", "observer", "parents", ]
     TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime", "observer": "ID", "parents": "List[ID]"}
@@ -464,17 +516,6 @@ class S3FileInput(ObjectBase):
         self.name = name
         self.contentType = contentType
         self.data = data
-
-
-class QueryExpression(ObjectBase):
-    FIELDS = ["field", "operator", "value", "children", ]
-    TYPES = {"field": "String", "operator": "Operator", "value": "String", "children": "List[QueryExpression]"}
-
-    def __init__(self, field: 'String'=None, operator: 'Operator'=None, value: 'String'=None, children: 'List[QueryExpression]'=None):
-        self.field = field
-        self.operator = operator
-        self.value = value
-        self.children = children
 
 
 class CoordinateSpaceInput(ObjectBase):
@@ -725,17 +766,17 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return DatapointList.from_json(results.get("datapoints"))
 
-    def getDatapoint(self, datapoint_id: 'ID'=None) -> Datapoint:
-        args = ["datapoint_id: 'ID'=None"]
+    def getDatapoint(self, data_id: 'ID'=None) -> Datapoint:
+        args = ["data_id: 'ID'=None"]
         variables = dict()
         var_types = dict()
 
-        if datapoint_id is not None:
-            var_types["datapoint_id"] = ID
-            if hasattr(datapoint_id, "to_json"):
-                variables["datapoint_id"] = datapoint_id.to_json()
+        if data_id is not None:
+            var_types["data_id"] = ID
+            if hasattr(data_id, "to_json"):
+                variables["data_id"] = data_id.to_json()
             else:
-                variables["datapoint_id"] = datapoint_id
+                variables["data_id"] = data_id
 
         query = self.prepare(Datapoint, "getDatapoint", variables, var_types)
         results = self.query(query, variables)
@@ -756,6 +797,29 @@ class Query(QueryBase):
         query = self.prepare(DatapointList, "findDatapointsForObserver", variables, var_types)
         results = self.query(query, variables)
         return DatapointList.from_json(results.get("findDatapointsForObserver"))
+
+    def findDatapoints(self, query: 'QueryExpression'=None, page: 'PaginationInput'=None) -> DatapointList:
+        args = ["query: 'QueryExpression'=None", "page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if query is not None:
+            var_types["query"] = QueryExpression
+            if hasattr(query, "to_json"):
+                variables["query"] = query.to_json()
+            else:
+                variables["query"] = query
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(DatapointList, "findDatapoints", variables, var_types)
+        results = self.query(query, variables)
+        return DatapointList.from_json(results.get("findDatapoints"))
 
 
 class Mutation(MutationBase):
@@ -878,6 +942,29 @@ class Mutation(MutationBase):
         query = self.prepare(Assignment, "assignToEnvironment", variables, var_types)
         results = self.query(query, variables)
         return Assignment.from_json(results.get("assignToEnvironment"))
+
+    def updateAssignment(self, assignment_id: 'ID'=None, assignment: 'AssignmentUpdateInput'=None) -> Assignment:
+        args = ["assignment_id: 'ID'=None", "assignment: 'AssignmentUpdateInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if assignment_id is not None:
+            var_types["assignment_id"] = ID
+            if hasattr(assignment_id, "to_json"):
+                variables["assignment_id"] = assignment_id.to_json()
+            else:
+                variables["assignment_id"] = assignment_id
+
+        if assignment is not None:
+            var_types["assignment"] = AssignmentUpdateInput
+            if hasattr(assignment, "to_json"):
+                variables["assignment"] = assignment.to_json()
+            else:
+                variables["assignment"] = assignment
+
+        query = self.prepare(Assignment, "updateAssignment", variables, var_types)
+        results = self.query(query, variables)
+        return Assignment.from_json(results.get("updateAssignment"))
 
     def createDatapoint(self, datapoint: 'DatapointInput'=None) -> Datapoint:
         args = ["datapoint: 'DatapointInput'=None"]
