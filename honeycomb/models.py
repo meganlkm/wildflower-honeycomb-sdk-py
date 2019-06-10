@@ -195,15 +195,16 @@ class EnvironmentList(ObjectBase):
 
 
 class Environment(ObjectBase):
-    FIELDS = ["environment_id", "name", "description", "location", "assignments", "system", ]
-    TYPES = {"environment_id": "ID", "name": "String", "description": "String", "location": "String", "assignments": "List[Assignment]", "system": "System"}
+    FIELDS = ["environment_id", "name", "description", "location", "assignments", "layouts", "system", ]
+    TYPES = {"environment_id": "ID", "name": "String", "description": "String", "location": "String", "assignments": "List[Assignment]", "layouts": "List[Layout]", "system": "System"}
 
-    def __init__(self, environment_id: 'ID'=None, name: 'String'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment]'=None, system: 'System'=None):
+    def __init__(self, environment_id: 'ID'=None, name: 'String'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment]'=None, layouts: 'List[Layout]'=None, system: 'System'=None):
         self.environment_id = environment_id
         self.name = name
         self.description = description
         self.location = location
         self.assignments = assignments
+        self.layouts = layouts
         self.system = system
 
 
@@ -232,10 +233,10 @@ class Person(ObjectBase):
 
 
 class Datapoint(ObjectBase):
-    FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "system", ]
-    TYPES = {"data_id": "ID", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String", "observed_time": "DateTime", "observer": "Observer", "system": "System"}
+    FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "duration", "system", ]
+    TYPES = {"data_id": "ID", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String", "observed_time": "DateTime", "observer": "Observer", "duration": "Int", "system": "System"}
 
-    def __init__(self, data_id: 'ID'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String'=None, observed_time: 'DateTime'=None, observer: 'Observer'=None, system: 'System'=None):
+    def __init__(self, data_id: 'ID'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String'=None, observed_time: 'DateTime'=None, observer: 'Observer'=None, duration: 'Int'=None, system: 'System'=None):
         self.data_id = data_id
         self.parents = parents
         self.format = format
@@ -243,6 +244,7 @@ class Datapoint(ObjectBase):
         self.url = url
         self.observed_time = observed_time
         self.observer = observer
+        self.duration = duration
         self.system = system
 
 
@@ -261,6 +263,32 @@ class S3File(ObjectBase):
         self.contentType = contentType
         self.size = size
         self.created = created
+
+
+class Layout(ObjectBase):
+    FIELDS = ["layout_id", "environment", "spaces", "objects", "start", "end", "system", ]
+    TYPES = {"layout_id": "ID", "environment": "Environment", "spaces": "List[Rect]", "objects": "List[Rect]", "start": "DateTime", "end": "DateTime", "system": "System"}
+
+    def __init__(self, layout_id: 'ID'=None, environment: 'Environment'=None, spaces: 'List[Rect]'=None, objects: 'List[Rect]'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System'=None):
+        self.layout_id = layout_id
+        self.environment = environment
+        self.spaces = spaces
+        self.objects = objects
+        self.start = start
+        self.end = end
+        self.system = system
+
+
+class Rect(ObjectBase):
+    FIELDS = ["name", "x", "y", "width", "height", ]
+    TYPES = {"name": "String", "x": "Int", "y": "Int", "width": "Int", "height": "Int"}
+
+    def __init__(self, name: 'String'=None, x: 'Int'=None, y: 'Int'=None, width: 'Int'=None, height: 'Int'=None):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
 
 
 class DatapointList(ObjectBase):
@@ -496,16 +524,41 @@ class AssignmentUpdateInput(ObjectBase):
         self.end = end
 
 
-class DatapointInput(ObjectBase):
-    FIELDS = ["format", "file", "observed_time", "observer", "parents", ]
-    TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime", "observer": "ID", "parents": "List[ID]"}
+class LayoutInput(ObjectBase):
+    FIELDS = ["environment", "spaces", "objects", "start", "end", ]
+    TYPES = {"environment": "ID", "spaces": "List[RectInput]", "objects": "List[RectInput]", "start": "DateTime", "end": "DateTime"}
 
-    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, observed_time: 'DateTime'=None, observer: 'ID'=None, parents: 'List[ID]'=None):
+    def __init__(self, environment: 'ID'=None, spaces: 'List[RectInput]'=None, objects: 'List[RectInput]'=None, start: 'DateTime'=None, end: 'DateTime'=None):
+        self.environment = environment
+        self.spaces = spaces
+        self.objects = objects
+        self.start = start
+        self.end = end
+
+
+class RectInput(ObjectBase):
+    FIELDS = ["name", "x", "y", "width", "height", ]
+    TYPES = {"name": "String", "x": "Int", "y": "Int", "width": "Int", "height": "Int"}
+
+    def __init__(self, name: 'String'=None, x: 'Int'=None, y: 'Int'=None, width: 'Int'=None, height: 'Int'=None):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+class DatapointInput(ObjectBase):
+    FIELDS = ["format", "file", "observed_time", "observer", "parents", "duration", ]
+    TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime", "observer": "ID", "parents": "List[ID]", "duration": "Int"}
+
+    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, observed_time: 'DateTime'=None, observer: 'ID'=None, parents: 'List[ID]'=None, duration: 'Int'=None):
         self.format = format
         self.file = file
         self.observed_time = observed_time
         self.observer = observer
         self.parents = parents
+        self.duration = duration
 
 
 class S3FileInput(ObjectBase):
@@ -965,6 +1018,45 @@ class Mutation(MutationBase):
         query = self.prepare(Assignment, "updateAssignment", variables, var_types)
         results = self.query(query, variables)
         return Assignment.from_json(results.get("updateAssignment"))
+
+    def createLayout(self, layout: 'LayoutInput'=None) -> Layout:
+        args = ["layout: 'LayoutInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if layout is not None:
+            var_types["layout"] = LayoutInput
+            if hasattr(layout, "to_json"):
+                variables["layout"] = layout.to_json()
+            else:
+                variables["layout"] = layout
+
+        query = self.prepare(Layout, "createLayout", variables, var_types)
+        results = self.query(query, variables)
+        return Layout.from_json(results.get("createLayout"))
+
+    def updateLayout(self, layout_id: 'ID'=None, layout: 'AssignmentUpdateInput'=None) -> Layout:
+        args = ["layout_id: 'ID'=None", "layout: 'AssignmentUpdateInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if layout_id is not None:
+            var_types["layout_id"] = ID
+            if hasattr(layout_id, "to_json"):
+                variables["layout_id"] = layout_id.to_json()
+            else:
+                variables["layout_id"] = layout_id
+
+        if layout is not None:
+            var_types["layout"] = AssignmentUpdateInput
+            if hasattr(layout, "to_json"):
+                variables["layout"] = layout.to_json()
+            else:
+                variables["layout"] = layout
+
+        query = self.prepare(Layout, "updateLayout", variables, var_types)
+        results = self.query(query, variables)
+        return Layout.from_json(results.get("updateLayout"))
 
     def createDatapoint(self, datapoint: 'DatapointInput'=None) -> Datapoint:
         args = ["datapoint: 'DatapointInput'=None"]

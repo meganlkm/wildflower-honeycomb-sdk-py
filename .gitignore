@@ -5,3 +5,5 @@ wildflower_honeycomb\.egg-info/
 \.cache/v/cache/
 
 \.coverage
+
+wildflower_honeycomb_sdk\.egg-info/
