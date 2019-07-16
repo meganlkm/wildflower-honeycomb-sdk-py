@@ -71,6 +71,14 @@ class Operator(Enum):
         return str(self.value)
 
 
+class Status(Enum):
+    ok = "ok"
+    error = "error"
+
+    def __str__(self):
+        return str(self.value)
+
+
 class DataFormat(Enum):
     BINARY = "BINARY"
     CSV = "CSV"
@@ -297,6 +305,15 @@ class DatapointList(ObjectBase):
 
     def __init__(self, data: 'List[Datapoint]'=None):
         self.data = data
+
+
+class DeleteStatusResponse(ObjectBase):
+    FIELDS = ["status", "error", ]
+    TYPES = {"status": "Status", "error": "String"}
+
+    def __init__(self, status: 'Status'=None, error: 'String'=None):
+        self.status = status
+        self.error = error
 
 
 class Sort(ObjectBase):
@@ -569,6 +586,16 @@ class S3FileInput(ObjectBase):
         self.name = name
         self.contentType = contentType
         self.data = data
+
+
+class CascadeLink(ObjectBase):
+    FIELDS = ["target_type_name", "target_field_name", "isS3File", ]
+    TYPES = {"target_type_name": "String", "target_field_name": "String", "isS3File": "Boolean"}
+
+    def __init__(self, target_type_name: 'String'=None, target_field_name: 'String'=None, isS3File: 'Boolean'=None):
+        self.target_type_name = target_type_name
+        self.target_field_name = target_field_name
+        self.isS3File = isS3File
 
 
 class CoordinateSpaceInput(ObjectBase):
@@ -1073,3 +1100,19 @@ class Mutation(MutationBase):
         query = self.prepare(Datapoint, "createDatapoint", variables, var_types)
         results = self.query(query, variables)
         return Datapoint.from_json(results.get("createDatapoint"))
+
+    def deleteDatapoint(self, data_id: 'ID'=None) -> DeleteStatusResponse:
+        args = ["data_id: 'ID'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if data_id is not None:
+            var_types["data_id"] = ID
+            if hasattr(data_id, "to_json"):
+                variables["data_id"] = data_id.to_json()
+            else:
+                variables["data_id"] = data_id
+
+        query = self.prepare(DeleteStatusResponse, "deleteDatapoint", variables, var_types)
+        results = self.query(query, variables)
+        return DeleteStatusResponse.from_json(results.get("deleteDatapoint"))
