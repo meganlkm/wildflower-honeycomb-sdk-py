@@ -1222,7 +1222,7 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return InferenceExecution__Required.from_json(results.get("getInferenceExecution"))
 
-    def findInferences(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
+    def findInferences(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
         args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -1241,9 +1241,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(DatapointList__Required, "findInferences", variables, var_types)
+        query = self.prepare(InferenceExecutionList__Required, "findInferences", variables, var_types)
         results = self.query(query, variables)
-        return DatapointList__Required.from_json(results.get("findInferences"))
+        return InferenceExecutionList__Required.from_json(results.get("findInferences"))
 
 
 class Mutation(MutationBase):
