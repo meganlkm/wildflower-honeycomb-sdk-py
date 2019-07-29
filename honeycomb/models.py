@@ -6,12 +6,19 @@ from gqlpycgen.api import QueryBase, ObjectBase, MutationBase
 
 
 ID = NewType('ID', str)
+ID__Required = NewType('ID!', str)
 Int = NewType('Int', int)
+Int__Required = NewType('Int!', int)
 String = NewType('String', str)
+String__Required = NewType('String!', str)
 Float = NewType('Float', float)
+Float__Required = NewType('Float!', float)
 Boolean = NewType('Boolean', bool)
+Boolean__Required = NewType('Boolean!', bool)
 Upload = NewType('Upload', str)
+Upload__Required = NewType('Upload', str)
 DateTime = NewType('DateTime', str)
+DateTime__Required = NewType('DateTime', str)
 
 
 class SortDirection(Enum):
@@ -20,6 +27,9 @@ class SortDirection(Enum):
 
     def __str__(self):
         return str(self.value)
+
+
+SortDirection__Required = SortDirection
 
 
 class SensorType(Enum):
@@ -34,6 +44,9 @@ class SensorType(Enum):
         return str(self.value)
 
 
+SensorType__Required = SensorType
+
+
 class PropertyType(Enum):
     BOOL = "BOOL"
     STR = "STR"
@@ -45,12 +58,18 @@ class PropertyType(Enum):
         return str(self.value)
 
 
+PropertyType__Required = PropertyType
+
+
 class AssignableTypeEnum(Enum):
     PERSON = "PERSON"
     DEVICE = "DEVICE"
 
     def __str__(self):
         return str(self.value)
+
+
+AssignableTypeEnum__Required = AssignableTypeEnum
 
 
 class Operator(Enum):
@@ -71,12 +90,18 @@ class Operator(Enum):
         return str(self.value)
 
 
+Operator__Required = Operator
+
+
 class Status(Enum):
     ok = "ok"
     error = "error"
 
     def __str__(self):
         return str(self.value)
+
+
+Status__Required = Status
 
 
 class DataFormat(Enum):
@@ -91,44 +116,62 @@ class DataFormat(Enum):
         return str(self.value)
 
 
+DataFormat__Required = DataFormat
+
+
 class Tuple(ObjectBase):
     FIELDS = ["x", "y", "z", ]
-    TYPES = {"x": "Float", "y": "Float", "z": "Float"}
+    TYPES = {"x": "Float__Required", "y": "Float__Required", "z": "Float__Required"}
 
-    def __init__(self, x: 'Float'=None, y: 'Float'=None, z: 'Float'=None):
+    def __init__(self, x: 'Float__Required'=None, y: 'Float__Required'=None, z: 'Float__Required'=None):
         self.x = x
         self.y = y
         self.z = z
 
 
-class DeviceList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[Device]"}
+class Tuple__Required(Tuple):
+    pass
 
-    def __init__(self, data: 'List[Device]'=None):
+
+class DeviceList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[Device__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[Device__Required]'=None, page_info: 'PageInfo__Required'=None):
         self.data = data
+        self.page_info = page_info
+
+
+class DeviceList__Required(DeviceList):
+    pass
 
 
 class Device(ObjectBase):
-    FIELDS = ["device_id", "part_number", "name", "tag_id", "description", "sensors", "configurations", "system", ]
-    TYPES = {"device_id": "ID", "part_number": "String", "name": "String", "tag_id": "String", "description": "String", "sensors": "List[SensorInstallation]", "configurations": "List[DeviceConfiguration]", "system": "System"}
+    FIELDS = ["device_id", "part_number", "name", "tag_id", "serial_number", "mac_address", "description", "sensors", "configurations", "system", ]
+    TYPES = {"device_id": "ID__Required", "part_number": "String", "name": "String__Required", "tag_id": "String", "serial_number": "String", "mac_address": "List[String__Required]", "description": "String", "sensors": "List[SensorInstallation__Required]", "configurations": "List[DeviceConfiguration__Required]", "system": "System__Required"}
 
-    def __init__(self, device_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, tag_id: 'String'=None, description: 'String'=None, sensors: 'List[SensorInstallation]'=None, configurations: 'List[DeviceConfiguration]'=None, system: 'System'=None):
+    def __init__(self, device_id: 'ID__Required'=None, part_number: 'String'=None, name: 'String__Required'=None, tag_id: 'String'=None, serial_number: 'String'=None, mac_address: 'List[String__Required]'=None, description: 'String'=None, sensors: 'List[SensorInstallation__Required]'=None, configurations: 'List[DeviceConfiguration__Required]'=None, system: 'System__Required'=None):
         self.device_id = device_id
         self.part_number = part_number
         self.name = name
         self.tag_id = tag_id
+        self.serial_number = serial_number
+        self.mac_address = mac_address
         self.description = description
         self.sensors = sensors
         self.configurations = configurations
         self.system = system
 
 
+class Device__Required(Device):
+    pass
+
+
 class SensorInstallation(ObjectBase):
     FIELDS = ["sensor_install_id", "device", "description", "start", "end", "sensor", "tag_id", "config", "system", ]
-    TYPES = {"sensor_install_id": "ID", "device": "Device", "description": "String", "start": "DateTime", "end": "DateTime", "sensor": "Sensor", "tag_id": "String", "config": "List[Property]", "system": "System"}
+    TYPES = {"sensor_install_id": "ID__Required", "device": "Device__Required", "description": "String", "start": "DateTime__Required", "end": "DateTime", "sensor": "Sensor__Required", "tag_id": "String", "config": "List[Property__Required]", "system": "System__Required"}
 
-    def __init__(self, sensor_install_id: 'ID'=None, device: 'Device'=None, description: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None, sensor: 'Sensor'=None, tag_id: 'String'=None, config: 'List[Property]'=None, system: 'System'=None):
+    def __init__(self, sensor_install_id: 'ID__Required'=None, device: 'Device__Required'=None, description: 'String'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, sensor: 'Sensor__Required'=None, tag_id: 'String'=None, config: 'List[Property__Required]'=None, system: 'System__Required'=None):
         self.sensor_install_id = sensor_install_id
         self.device = device
         self.description = description
@@ -140,11 +183,15 @@ class SensorInstallation(ObjectBase):
         self.system = system
 
 
+class SensorInstallation__Required(SensorInstallation):
+    pass
+
+
 class Sensor(ObjectBase):
     FIELDS = ["sensor_id", "part_number", "name", "description", "sensor_type", "version", "default_config", "system", ]
-    TYPES = {"sensor_id": "ID", "part_number": "String", "name": "String", "description": "String", "sensor_type": "SensorType", "version": "Int", "default_config": "List[Property]", "system": "System"}
+    TYPES = {"sensor_id": "ID__Required", "part_number": "String", "name": "String__Required", "description": "String", "sensor_type": "SensorType__Required", "version": "Int__Required", "default_config": "List[Property__Required]", "system": "System__Required"}
 
-    def __init__(self, sensor_id: 'ID'=None, part_number: 'String'=None, name: 'String'=None, description: 'String'=None, sensor_type: 'SensorType'=None, version: 'Int'=None, default_config: 'List[Property]'=None, system: 'System'=None):
+    def __init__(self, sensor_id: 'ID__Required'=None, part_number: 'String'=None, name: 'String__Required'=None, description: 'String'=None, sensor_type: 'SensorType__Required'=None, version: 'Int__Required'=None, default_config: 'List[Property__Required]'=None, system: 'System__Required'=None):
         self.sensor_id = sensor_id
         self.part_number = part_number
         self.name = name
@@ -155,21 +202,29 @@ class Sensor(ObjectBase):
         self.system = system
 
 
+class Sensor__Required(Sensor):
+    pass
+
+
 class Property(ObjectBase):
     FIELDS = ["name", "value", "type", ]
-    TYPES = {"name": "String", "value": "String", "type": "PropertyType"}
+    TYPES = {"name": "String__Required", "value": "String", "type": "PropertyType__Required"}
 
-    def __init__(self, name: 'String'=None, value: 'String'=None, type: 'PropertyType'=None):
+    def __init__(self, name: 'String__Required'=None, value: 'String'=None, type: 'PropertyType__Required'=None):
         self.name = name
         self.value = value
         self.type = type
 
 
+class Property__Required(Property):
+    pass
+
+
 class DeviceConfiguration(ObjectBase):
     FIELDS = ["device_configuration_id", "device", "start", "end", "properties", "system", ]
-    TYPES = {"device_configuration_id": "ID", "device": "Device", "start": "DateTime", "end": "DateTime", "properties": "List[Property]", "system": "System"}
+    TYPES = {"device_configuration_id": "ID__Required", "device": "Device__Required", "start": "DateTime__Required", "end": "DateTime", "properties": "List[Property__Required]", "system": "System__Required"}
 
-    def __init__(self, device_configuration_id: 'ID'=None, device: 'Device'=None, start: 'DateTime'=None, end: 'DateTime'=None, properties: 'List[Property]'=None, system: 'System'=None):
+    def __init__(self, device_configuration_id: 'ID__Required'=None, device: 'Device__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, properties: 'List[Property__Required]'=None, system: 'System__Required'=None):
         self.device_configuration_id = device_configuration_id
         self.device = device
         self.start = start
@@ -178,151 +233,8 @@ class DeviceConfiguration(ObjectBase):
         self.system = system
 
 
-class SensorList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[Sensor]"}
-
-    def __init__(self, data: 'List[Sensor]'=None):
-        self.data = data
-
-
-class SensorInstallationList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[SensorInstallation]"}
-
-    def __init__(self, data: 'List[SensorInstallation]'=None):
-        self.data = data
-
-
-class EnvironmentList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[Environment]"}
-
-    def __init__(self, data: 'List[Environment]'=None):
-        self.data = data
-
-
-class Environment(ObjectBase):
-    FIELDS = ["environment_id", "name", "description", "location", "assignments", "layouts", "system", ]
-    TYPES = {"environment_id": "ID", "name": "String", "description": "String", "location": "String", "assignments": "List[Assignment]", "layouts": "List[Layout]", "system": "System"}
-
-    def __init__(self, environment_id: 'ID'=None, name: 'String'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment]'=None, layouts: 'List[Layout]'=None, system: 'System'=None):
-        self.environment_id = environment_id
-        self.name = name
-        self.description = description
-        self.location = location
-        self.assignments = assignments
-        self.layouts = layouts
-        self.system = system
-
-
-class Assignment(ObjectBase):
-    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "data", "system", ]
-    TYPES = {"assignment_id": "ID", "environment": "Environment", "assigned": "Assignable", "assigned_type": "AssignableTypeEnum", "start": "DateTime", "end": "DateTime", "data": "List[Datapoint]", "system": "System"}
-
-    def __init__(self, assignment_id: 'ID'=None, environment: 'Environment'=None, assigned: 'Assignable'=None, assigned_type: 'AssignableTypeEnum'=None, start: 'DateTime'=None, end: 'DateTime'=None, data: 'List[Datapoint]'=None, system: 'System'=None):
-        self.assignment_id = assignment_id
-        self.environment = environment
-        self.assigned = assigned
-        self.assigned_type = assigned_type
-        self.start = start
-        self.end = end
-        self.data = data
-        self.system = system
-
-
-class Person(ObjectBase):
-    FIELDS = ["person_id", "name", ]
-    TYPES = {"person_id": "ID", "name": "String"}
-
-    def __init__(self, person_id: 'ID'=None, name: 'String'=None):
-        self.person_id = person_id
-        self.name = name
-
-
-class Datapoint(ObjectBase):
-    FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "duration", "system", ]
-    TYPES = {"data_id": "ID", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String", "observed_time": "DateTime", "observer": "Observer", "duration": "Int", "system": "System"}
-
-    def __init__(self, data_id: 'ID'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String'=None, observed_time: 'DateTime'=None, observer: 'Observer'=None, duration: 'Int'=None, system: 'System'=None):
-        self.data_id = data_id
-        self.parents = parents
-        self.format = format
-        self.file = file
-        self.url = url
-        self.observed_time = observed_time
-        self.observer = observer
-        self.duration = duration
-        self.system = system
-
-
-class S3File(ObjectBase):
-    FIELDS = ["name", "bucketName", "key", "data", "filename", "mime", "encoding", "contentType", "size", "created", ]
-    TYPES = {"name": "String", "bucketName": "String", "key": "String", "data": "String", "filename": "String", "mime": "String", "encoding": "String", "contentType": "String", "size": "Int", "created": "String"}
-
-    def __init__(self, name: 'String'=None, bucketName: 'String'=None, key: 'String'=None, data: 'String'=None, filename: 'String'=None, mime: 'String'=None, encoding: 'String'=None, contentType: 'String'=None, size: 'Int'=None, created: 'String'=None):
-        self.name = name
-        self.bucketName = bucketName
-        self.key = key
-        self.data = data
-        self.filename = filename
-        self.mime = mime
-        self.encoding = encoding
-        self.contentType = contentType
-        self.size = size
-        self.created = created
-
-
-class Layout(ObjectBase):
-    FIELDS = ["layout_id", "environment", "spaces", "objects", "start", "end", "system", ]
-    TYPES = {"layout_id": "ID", "environment": "Environment", "spaces": "List[Rect]", "objects": "List[Rect]", "start": "DateTime", "end": "DateTime", "system": "System"}
-
-    def __init__(self, layout_id: 'ID'=None, environment: 'Environment'=None, spaces: 'List[Rect]'=None, objects: 'List[Rect]'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System'=None):
-        self.layout_id = layout_id
-        self.environment = environment
-        self.spaces = spaces
-        self.objects = objects
-        self.start = start
-        self.end = end
-        self.system = system
-
-
-class Rect(ObjectBase):
-    FIELDS = ["name", "x", "y", "width", "height", ]
-    TYPES = {"name": "String", "x": "Int", "y": "Int", "width": "Int", "height": "Int"}
-
-    def __init__(self, name: 'String'=None, x: 'Int'=None, y: 'Int'=None, width: 'Int'=None, height: 'Int'=None):
-        self.name = name
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-
-
-class DatapointList(ObjectBase):
-    FIELDS = ["data", ]
-    TYPES = {"data": "List[Datapoint]"}
-
-    def __init__(self, data: 'List[Datapoint]'=None):
-        self.data = data
-
-
-class DeleteStatusResponse(ObjectBase):
-    FIELDS = ["status", "error", ]
-    TYPES = {"status": "Status", "error": "String"}
-
-    def __init__(self, status: 'Status'=None, error: 'String'=None):
-        self.status = status
-        self.error = error
-
-
-class Sort(ObjectBase):
-    FIELDS = ["field", "direction", ]
-    TYPES = {"field": "String", "direction": "SortDirection"}
-
-    def __init__(self, field: 'String'=None, direction: 'SortDirection'=None):
-        self.field = field
-        self.direction = direction
+class DeviceConfiguration__Required(DeviceConfiguration):
+    pass
 
 
 class PageInfo(ObjectBase):
@@ -337,21 +249,266 @@ class PageInfo(ObjectBase):
         self.sort = sort
 
 
+class PageInfo__Required(PageInfo):
+    pass
+
+
+class Sort(ObjectBase):
+    FIELDS = ["field", "direction", ]
+    TYPES = {"field": "String__Required", "direction": "SortDirection__Required"}
+
+    def __init__(self, field: 'String__Required'=None, direction: 'SortDirection__Required'=None):
+        self.field = field
+        self.direction = direction
+
+
+class Sort__Required(Sort):
+    pass
+
+
+class SensorList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[Sensor__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[Sensor__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class SensorList__Required(SensorList):
+    pass
+
+
+class SensorInstallationList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[SensorInstallation__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[SensorInstallation__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class SensorInstallationList__Required(SensorInstallationList):
+    pass
+
+
+class EnvironmentList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[Environment__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[Environment__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class EnvironmentList__Required(EnvironmentList):
+    pass
+
+
+class Environment(ObjectBase):
+    FIELDS = ["environment_id", "name", "description", "location", "assignments", "layouts", "system", ]
+    TYPES = {"environment_id": "ID__Required", "name": "String__Required", "description": "String", "location": "String", "assignments": "List[Assignment__Required]", "layouts": "List[Layout__Required]", "system": "System__Required"}
+
+    def __init__(self, environment_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment__Required]'=None, layouts: 'List[Layout__Required]'=None, system: 'System__Required'=None):
+        self.environment_id = environment_id
+        self.name = name
+        self.description = description
+        self.location = location
+        self.assignments = assignments
+        self.layouts = layouts
+        self.system = system
+
+
+class Environment__Required(Environment):
+    pass
+
+
+class Assignment(ObjectBase):
+    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "data", "system", ]
+    TYPES = {"assignment_id": "ID__Required", "environment": "Environment__Required", "assigned": "Assignable__Required", "assigned_type": "AssignableTypeEnum__Required", "start": "DateTime__Required", "end": "DateTime", "data": "List[Datapoint__Required]", "system": "System__Required"}
+
+    def __init__(self, assignment_id: 'ID__Required'=None, environment: 'Environment__Required'=None, assigned: 'Assignable__Required'=None, assigned_type: 'AssignableTypeEnum__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, data: 'List[Datapoint__Required]'=None, system: 'System__Required'=None):
+        self.assignment_id = assignment_id
+        self.environment = environment
+        self.assigned = assigned
+        self.assigned_type = assigned_type
+        self.start = start
+        self.end = end
+        self.data = data
+        self.system = system
+
+
+class Assignment__Required(Assignment):
+    pass
+
+
+class Person(ObjectBase):
+    FIELDS = ["person_id", "name", ]
+    TYPES = {"person_id": "ID__Required", "name": "String__Required"}
+
+    def __init__(self, person_id: 'ID__Required'=None, name: 'String__Required'=None):
+        self.person_id = person_id
+        self.name = name
+
+
+class Person__Required(Person):
+    pass
+
+
+class Datapoint(ObjectBase):
+    FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "observers", "duration", "system", ]
+    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String__Required", "observed_time": "DateTime__Required", "observer": "Observer", "observers": "List[Observer__Required]", "duration": "Int", "system": "System__Required"}
+
+    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String__Required'=None, observed_time: 'DateTime__Required'=None, observer: 'Observer'=None, observers: 'List[Observer__Required]'=None, duration: 'Int'=None, system: 'System__Required'=None):
+        self.data_id = data_id
+        self.parents = parents
+        self.format = format
+        self.file = file
+        self.url = url
+        self.observed_time = observed_time
+        self.observer = observer
+        self.observers = observers
+        self.duration = duration
+        self.system = system
+
+
+class Datapoint__Required(Datapoint):
+    pass
+
+
+class S3File(ObjectBase):
+    FIELDS = ["name", "bucketName", "key", "data", "filename", "mime", "encoding", "contentType", "size", "created", ]
+    TYPES = {"name": "String", "bucketName": "String__Required", "key": "String__Required", "data": "String__Required", "filename": "String", "mime": "String", "encoding": "String", "contentType": "String__Required", "size": "Int", "created": "String__Required"}
+
+    def __init__(self, name: 'String'=None, bucketName: 'String__Required'=None, key: 'String__Required'=None, data: 'String__Required'=None, filename: 'String'=None, mime: 'String'=None, encoding: 'String'=None, contentType: 'String__Required'=None, size: 'Int'=None, created: 'String__Required'=None):
+        self.name = name
+        self.bucketName = bucketName
+        self.key = key
+        self.data = data
+        self.filename = filename
+        self.mime = mime
+        self.encoding = encoding
+        self.contentType = contentType
+        self.size = size
+        self.created = created
+
+
+class S3File__Required(S3File):
+    pass
+
+
+class InferenceExecution(ObjectBase):
+    FIELDS = ["inference_id", "name", "notes", "model", "version", "data_sources", "data_results", "execution_start", "system", ]
+    TYPES = {"inference_id": "ID__Required", "name": "String", "notes": "String", "model": "String", "version": "String", "data_sources": "List[Datapoint__Required]", "data_results": "List[Datapoint__Required]", "execution_start": "DateTime__Required", "system": "System__Required"}
+
+    def __init__(self, inference_id: 'ID__Required'=None, name: 'String'=None, notes: 'String'=None, model: 'String'=None, version: 'String'=None, data_sources: 'List[Datapoint__Required]'=None, data_results: 'List[Datapoint__Required]'=None, execution_start: 'DateTime__Required'=None, system: 'System__Required'=None):
+        self.inference_id = inference_id
+        self.name = name
+        self.notes = notes
+        self.model = model
+        self.version = version
+        self.data_sources = data_sources
+        self.data_results = data_results
+        self.execution_start = execution_start
+        self.system = system
+
+
+class InferenceExecution__Required(InferenceExecution):
+    pass
+
+
+class Layout(ObjectBase):
+    FIELDS = ["layout_id", "environment", "spaces", "objects", "start", "end", "system", ]
+    TYPES = {"layout_id": "ID__Required", "environment": "Environment__Required", "spaces": "List[Rect__Required]", "objects": "List[Rect__Required]", "start": "DateTime", "end": "DateTime", "system": "System__Required"}
+
+    def __init__(self, layout_id: 'ID__Required'=None, environment: 'Environment__Required'=None, spaces: 'List[Rect__Required]'=None, objects: 'List[Rect__Required]'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System__Required'=None):
+        self.layout_id = layout_id
+        self.environment = environment
+        self.spaces = spaces
+        self.objects = objects
+        self.start = start
+        self.end = end
+        self.system = system
+
+
+class Layout__Required(Layout):
+    pass
+
+
+class Rect(ObjectBase):
+    FIELDS = ["name", "x", "y", "width", "height", ]
+    TYPES = {"name": "String", "x": "Int__Required", "y": "Int__Required", "width": "Int__Required", "height": "Int__Required"}
+
+    def __init__(self, name: 'String'=None, x: 'Int__Required'=None, y: 'Int__Required'=None, width: 'Int__Required'=None, height: 'Int__Required'=None):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+class Rect__Required(Rect):
+    pass
+
+
+class DatapointList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[Datapoint__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[Datapoint__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class DatapointList__Required(DatapointList):
+    pass
+
+
+class InferenceExecutionList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[InferenceExecution__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[InferenceExecution__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class InferenceExecutionList__Required(InferenceExecutionList):
+    pass
+
+
+class DeleteStatusResponse(ObjectBase):
+    FIELDS = ["status", "error", ]
+    TYPES = {"status": "Status__Required", "error": "String"}
+
+    def __init__(self, status: 'Status__Required'=None, error: 'String'=None):
+        self.status = status
+        self.error = error
+
+
+class DeleteStatusResponse__Required(DeleteStatusResponse):
+    pass
+
+
 class System(ObjectBase):
     FIELDS = ["type_name", "created", "last_modified", ]
-    TYPES = {"type_name": "String", "created": "DateTime", "last_modified": "DateTime"}
+    TYPES = {"type_name": "String__Required", "created": "DateTime__Required", "last_modified": "DateTime"}
 
-    def __init__(self, type_name: 'String'=None, created: 'DateTime'=None, last_modified: 'DateTime'=None):
+    def __init__(self, type_name: 'String__Required'=None, created: 'DateTime__Required'=None, last_modified: 'DateTime'=None):
         self.type_name = type_name
         self.created = created
         self.last_modified = last_modified
 
 
+class System__Required(System):
+    pass
+
+
 class CoordinateSpace(ObjectBase):
     FIELDS = ["space_id", "name", "environment", "start", "end", "system", ]
-    TYPES = {"space_id": "ID", "name": "String", "environment": "Environment", "start": "DateTime", "end": "DateTime", "system": "System"}
+    TYPES = {"space_id": "ID__Required", "name": "String__Required", "environment": "Environment__Required", "start": "DateTime__Required", "end": "DateTime", "system": "System__Required"}
 
-    def __init__(self, space_id: 'ID'=None, name: 'String'=None, environment: 'Environment'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System'=None):
+    def __init__(self, space_id: 'ID__Required'=None, name: 'String__Required'=None, environment: 'Environment__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, system: 'System__Required'=None):
         self.space_id = space_id
         self.name = name
         self.environment = environment
@@ -360,49 +517,69 @@ class CoordinateSpace(ObjectBase):
         self.system = system
 
 
+class CoordinateSpace__Required(CoordinateSpace):
+    pass
+
+
 class Vector(ObjectBase):
     FIELDS = ["x", "y", "z", ]
-    TYPES = {"x": "Float", "y": "Float", "z": "Float"}
+    TYPES = {"x": "Float__Required", "y": "Float__Required", "z": "Float__Required"}
 
-    def __init__(self, x: 'Float'=None, y: 'Float'=None, z: 'Float'=None):
+    def __init__(self, x: 'Float__Required'=None, y: 'Float__Required'=None, z: 'Float__Required'=None):
         self.x = x
         self.y = y
         self.z = z
+
+
+class Vector__Required(Vector):
+    pass
 
 
 class Point(ObjectBase):
     FIELDS = ["x", "y", "z", ]
-    TYPES = {"x": "Float", "y": "Float", "z": "Float"}
+    TYPES = {"x": "Float__Required", "y": "Float__Required", "z": "Float__Required"}
 
-    def __init__(self, x: 'Float'=None, y: 'Float'=None, z: 'Float'=None):
+    def __init__(self, x: 'Float__Required'=None, y: 'Float__Required'=None, z: 'Float__Required'=None):
         self.x = x
         self.y = y
         self.z = z
 
 
+class Point__Required(Point):
+    pass
+
+
 class Pair(ObjectBase):
     FIELDS = ["x", "y", ]
-    TYPES = {"x": "Float", "y": "Float"}
+    TYPES = {"x": "Float__Required", "y": "Float__Required"}
 
-    def __init__(self, x: 'Float'=None, y: 'Float'=None):
+    def __init__(self, x: 'Float__Required'=None, y: 'Float__Required'=None):
         self.x = x
         self.y = y
 
 
+class Pair__Required(Pair):
+    pass
+
+
 class CameraParameters(ObjectBase):
     FIELDS = ["camera_matrix", "distortion_coeffs", ]
-    TYPES = {"camera_matrix": "List[Float]", "distortion_coeffs": "List[Float]"}
+    TYPES = {"camera_matrix": "List[Float__Required]", "distortion_coeffs": "List[Float__Required]"}
 
-    def __init__(self, camera_matrix: 'List[Float]'=None, distortion_coeffs: 'List[Float]'=None):
+    def __init__(self, camera_matrix: 'List[Float__Required]'=None, distortion_coeffs: 'List[Float__Required]'=None):
         self.camera_matrix = camera_matrix
         self.distortion_coeffs = distortion_coeffs
 
 
+class CameraParameters__Required(CameraParameters):
+    pass
+
+
 class ExtrinsicCalibration(ObjectBase):
     FIELDS = ["start", "end", "translation", "rotation", "objects", ]
-    TYPES = {"start": "DateTime", "end": "DateTime", "translation": "Tuple", "rotation": "Tuple", "objects": "List[GeometricObject]"}
+    TYPES = {"start": "DateTime__Required", "end": "DateTime", "translation": "Tuple__Required", "rotation": "Tuple__Required", "objects": "List[GeometricObject__Required]"}
 
-    def __init__(self, start: 'DateTime'=None, end: 'DateTime'=None, translation: 'Tuple'=None, rotation: 'Tuple'=None, objects: 'List[GeometricObject]'=None):
+    def __init__(self, start: 'DateTime__Required'=None, end: 'DateTime'=None, translation: 'Tuple__Required'=None, rotation: 'Tuple__Required'=None, objects: 'List[GeometricObject__Required]'=None):
         self.start = start
         self.end = end
         self.translation = translation
@@ -410,73 +587,103 @@ class ExtrinsicCalibration(ObjectBase):
         self.objects = objects
 
 
+class ExtrinsicCalibration__Required(ExtrinsicCalibration):
+    pass
+
+
 class PaginationInput(ObjectBase):
     FIELDS = ["max", "cursor", "sort", ]
-    TYPES = {"max": "Int", "cursor": "String", "sort": "List[SortInput]"}
+    TYPES = {"max": "Int", "cursor": "String", "sort": "List[SortInput__Required]"}
 
-    def __init__(self, max: 'Int'=None, cursor: 'String'=None, sort: 'List[SortInput]'=None):
+    def __init__(self, max: 'Int'=None, cursor: 'String'=None, sort: 'List[SortInput__Required]'=None):
         self.max = max
         self.cursor = cursor
         self.sort = sort
 
 
+class PaginationInput__Required(PaginationInput):
+    pass
+
+
 class SortInput(ObjectBase):
     FIELDS = ["field", "direction", ]
-    TYPES = {"field": "String", "direction": "SortDirection"}
+    TYPES = {"field": "String__Required", "direction": "SortDirection"}
 
-    def __init__(self, field: 'String'=None, direction: 'SortDirection'=None):
+    def __init__(self, field: 'String__Required'=None, direction: 'SortDirection'=None):
         self.field = field
         self.direction = direction
 
 
+class SortInput__Required(SortInput):
+    pass
+
+
 class QueryExpression(ObjectBase):
     FIELDS = ["field", "operator", "value", "children", ]
-    TYPES = {"field": "String", "operator": "Operator", "value": "String", "children": "List[QueryExpression]"}
+    TYPES = {"field": "String", "operator": "Operator__Required", "value": "String", "children": "List[QueryExpression__Required]"}
 
-    def __init__(self, field: 'String'=None, operator: 'Operator'=None, value: 'String'=None, children: 'List[QueryExpression]'=None):
+    def __init__(self, field: 'String'=None, operator: 'Operator__Required'=None, value: 'String'=None, children: 'List[QueryExpression__Required]'=None):
         self.field = field
         self.operator = operator
         self.value = value
         self.children = children
 
 
-class DeviceInput(ObjectBase):
-    FIELDS = ["name", "description", "part_number", "tag_id", ]
-    TYPES = {"name": "String", "description": "String", "part_number": "String", "tag_id": "String"}
+class QueryExpression__Required(QueryExpression):
+    pass
 
-    def __init__(self, name: 'String'=None, description: 'String'=None, part_number: 'String'=None, tag_id: 'String'=None):
+
+class DeviceInput(ObjectBase):
+    FIELDS = ["name", "description", "part_number", "tag_id", "serial_number", "mac_address", ]
+    TYPES = {"name": "String", "description": "String", "part_number": "String", "tag_id": "String", "serial_number": "String", "mac_address": "List[String__Required]"}
+
+    def __init__(self, name: 'String'=None, description: 'String'=None, part_number: 'String'=None, tag_id: 'String'=None, serial_number: 'String'=None, mac_address: 'List[String__Required]'=None):
         self.name = name
         self.description = description
         self.part_number = part_number
         self.tag_id = tag_id
+        self.serial_number = serial_number
+        self.mac_address = mac_address
+
+
+class DeviceInput__Required(DeviceInput):
+    pass
 
 
 class DeviceConfigurationInput(ObjectBase):
     FIELDS = ["device", "start", "end", "properties", ]
-    TYPES = {"device": "ID", "start": "DateTime", "end": "DateTime", "properties": "List[PropertyInput]"}
+    TYPES = {"device": "ID__Required", "start": "DateTime__Required", "end": "DateTime", "properties": "List[PropertyInput__Required]"}
 
-    def __init__(self, device: 'ID'=None, start: 'DateTime'=None, end: 'DateTime'=None, properties: 'List[PropertyInput]'=None):
+    def __init__(self, device: 'ID__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, properties: 'List[PropertyInput__Required]'=None):
         self.device = device
         self.start = start
         self.end = end
         self.properties = properties
 
 
+class DeviceConfigurationInput__Required(DeviceConfigurationInput):
+    pass
+
+
 class PropertyInput(ObjectBase):
     FIELDS = ["name", "value", "type", ]
-    TYPES = {"name": "String", "value": "String", "type": "PropertyType"}
+    TYPES = {"name": "String__Required", "value": "String", "type": "PropertyType__Required"}
 
-    def __init__(self, name: 'String'=None, value: 'String'=None, type: 'PropertyType'=None):
+    def __init__(self, name: 'String__Required'=None, value: 'String'=None, type: 'PropertyType__Required'=None):
         self.name = name
         self.value = value
         self.type = type
 
 
+class PropertyInput__Required(PropertyInput):
+    pass
+
+
 class SensorInput(ObjectBase):
     FIELDS = ["part_number", "name", "description", "sensor_type", "version", "default_config", ]
-    TYPES = {"part_number": "String", "name": "String", "description": "String", "sensor_type": "SensorType", "version": "Int", "default_config": "List[PropertyInput]"}
+    TYPES = {"part_number": "String", "name": "String__Required", "description": "String", "sensor_type": "SensorType__Required", "version": "Int__Required", "default_config": "List[PropertyInput__Required]"}
 
-    def __init__(self, part_number: 'String'=None, name: 'String'=None, description: 'String'=None, sensor_type: 'SensorType'=None, version: 'Int'=None, default_config: 'List[PropertyInput]'=None):
+    def __init__(self, part_number: 'String'=None, name: 'String__Required'=None, description: 'String'=None, sensor_type: 'SensorType__Required'=None, version: 'Int__Required'=None, default_config: 'List[PropertyInput__Required]'=None):
         self.part_number = part_number
         self.name = name
         self.description = description
@@ -485,11 +692,15 @@ class SensorInput(ObjectBase):
         self.default_config = default_config
 
 
+class SensorInput__Required(SensorInput):
+    pass
+
+
 class SensorInstallationInput(ObjectBase):
     FIELDS = ["device", "sensor", "description", "start", "end", "tag_id", "config", ]
-    TYPES = {"device": "ID", "sensor": "ID", "description": "String", "start": "DateTime", "end": "DateTime", "tag_id": "String", "config": "List[PropertyInput]"}
+    TYPES = {"device": "ID__Required", "sensor": "ID__Required", "description": "String", "start": "DateTime", "end": "DateTime", "tag_id": "String", "config": "List[PropertyInput__Required]"}
 
-    def __init__(self, device: 'ID'=None, sensor: 'ID'=None, description: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None, tag_id: 'String'=None, config: 'List[PropertyInput]'=None):
+    def __init__(self, device: 'ID__Required'=None, sensor: 'ID__Required'=None, description: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None, tag_id: 'String'=None, config: 'List[PropertyInput__Required]'=None):
         self.device = device
         self.sensor = sensor
         self.description = description
@@ -499,11 +710,15 @@ class SensorInstallationInput(ObjectBase):
         self.config = config
 
 
+class SensorInstallationInput__Required(SensorInstallationInput):
+    pass
+
+
 class SensorInstallationUpdateInput(ObjectBase):
     FIELDS = ["description", "start", "end", "tag_id", "config", ]
-    TYPES = {"description": "String", "start": "DateTime", "end": "DateTime", "tag_id": "String", "config": "List[PropertyInput]"}
+    TYPES = {"description": "String", "start": "DateTime", "end": "DateTime", "tag_id": "String", "config": "List[PropertyInput__Required]"}
 
-    def __init__(self, description: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None, tag_id: 'String'=None, config: 'List[PropertyInput]'=None):
+    def __init__(self, description: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None, tag_id: 'String'=None, config: 'List[PropertyInput__Required]'=None):
         self.description = description
         self.start = start
         self.end = end
@@ -511,26 +726,38 @@ class SensorInstallationUpdateInput(ObjectBase):
         self.config = config
 
 
+class SensorInstallationUpdateInput__Required(SensorInstallationUpdateInput):
+    pass
+
+
 class EnvironmentInput(ObjectBase):
     FIELDS = ["name", "description", "location", ]
-    TYPES = {"name": "String", "description": "String", "location": "String"}
+    TYPES = {"name": "String__Required", "description": "String", "location": "String"}
 
-    def __init__(self, name: 'String'=None, description: 'String'=None, location: 'String'=None):
+    def __init__(self, name: 'String__Required'=None, description: 'String'=None, location: 'String'=None):
         self.name = name
         self.description = description
         self.location = location
 
 
+class EnvironmentInput__Required(EnvironmentInput):
+    pass
+
+
 class AssignmentInput(ObjectBase):
     FIELDS = ["environment", "assigned_type", "assigned", "start", "end", ]
-    TYPES = {"environment": "ID", "assigned_type": "AssignableTypeEnum", "assigned": "ID", "start": "DateTime", "end": "DateTime"}
+    TYPES = {"environment": "ID__Required", "assigned_type": "AssignableTypeEnum__Required", "assigned": "ID__Required", "start": "DateTime", "end": "DateTime"}
 
-    def __init__(self, environment: 'ID'=None, assigned_type: 'AssignableTypeEnum'=None, assigned: 'ID'=None, start: 'DateTime'=None, end: 'DateTime'=None):
+    def __init__(self, environment: 'ID__Required'=None, assigned_type: 'AssignableTypeEnum__Required'=None, assigned: 'ID__Required'=None, start: 'DateTime'=None, end: 'DateTime'=None):
         self.environment = environment
         self.assigned_type = assigned_type
         self.assigned = assigned
         self.start = start
         self.end = end
+
+
+class AssignmentInput__Required(AssignmentInput):
+    pass
 
 
 class AssignmentUpdateInput(ObjectBase):
@@ -541,11 +768,15 @@ class AssignmentUpdateInput(ObjectBase):
         self.end = end
 
 
+class AssignmentUpdateInput__Required(AssignmentUpdateInput):
+    pass
+
+
 class LayoutInput(ObjectBase):
     FIELDS = ["environment", "spaces", "objects", "start", "end", ]
-    TYPES = {"environment": "ID", "spaces": "List[RectInput]", "objects": "List[RectInput]", "start": "DateTime", "end": "DateTime"}
+    TYPES = {"environment": "ID__Required", "spaces": "List[RectInput__Required]", "objects": "List[RectInput__Required]", "start": "DateTime", "end": "DateTime"}
 
-    def __init__(self, environment: 'ID'=None, spaces: 'List[RectInput]'=None, objects: 'List[RectInput]'=None, start: 'DateTime'=None, end: 'DateTime'=None):
+    def __init__(self, environment: 'ID__Required'=None, spaces: 'List[RectInput__Required]'=None, objects: 'List[RectInput__Required]'=None, start: 'DateTime'=None, end: 'DateTime'=None):
         self.environment = environment
         self.spaces = spaces
         self.objects = objects
@@ -553,11 +784,15 @@ class LayoutInput(ObjectBase):
         self.end = end
 
 
+class LayoutInput__Required(LayoutInput):
+    pass
+
+
 class RectInput(ObjectBase):
     FIELDS = ["name", "x", "y", "width", "height", ]
-    TYPES = {"name": "String", "x": "Int", "y": "Int", "width": "Int", "height": "Int"}
+    TYPES = {"name": "String", "x": "Int__Required", "y": "Int__Required", "width": "Int__Required", "height": "Int__Required"}
 
-    def __init__(self, name: 'String'=None, x: 'Int'=None, y: 'Int'=None, width: 'Int'=None, height: 'Int'=None):
+    def __init__(self, name: 'String'=None, x: 'Int__Required'=None, y: 'Int__Required'=None, width: 'Int__Required'=None, height: 'Int__Required'=None):
         self.name = name
         self.x = x
         self.y = y
@@ -565,84 +800,138 @@ class RectInput(ObjectBase):
         self.height = height
 
 
-class DatapointInput(ObjectBase):
-    FIELDS = ["format", "file", "observed_time", "observer", "parents", "duration", ]
-    TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime", "observer": "ID", "parents": "List[ID]", "duration": "Int"}
+class RectInput__Required(RectInput):
+    pass
 
-    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, observed_time: 'DateTime'=None, observer: 'ID'=None, parents: 'List[ID]'=None, duration: 'Int'=None):
+
+class DatapointInput(ObjectBase):
+    FIELDS = ["format", "file", "observed_time", "observer", "observers", "parents", "duration", ]
+    TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime__Required", "observer": "ID__Required", "observers": "List[ID__Required]", "parents": "List[ID__Required]", "duration": "Int"}
+
+    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, observed_time: 'DateTime__Required'=None, observer: 'ID__Required'=None, observers: 'List[ID__Required]'=None, parents: 'List[ID__Required]'=None, duration: 'Int'=None):
         self.format = format
         self.file = file
         self.observed_time = observed_time
         self.observer = observer
+        self.observers = observers
         self.parents = parents
         self.duration = duration
 
 
+class DatapointInput__Required(DatapointInput):
+    pass
+
+
 class S3FileInput(ObjectBase):
     FIELDS = ["name", "contentType", "data", ]
-    TYPES = {"name": "String", "contentType": "String", "data": "Upload"}
+    TYPES = {"name": "String", "contentType": "String", "data": "Upload__Required"}
 
-    def __init__(self, name: 'String'=None, contentType: 'String'=None, data: 'Upload'=None):
+    def __init__(self, name: 'String'=None, contentType: 'String'=None, data: 'Upload__Required'=None):
         self.name = name
         self.contentType = contentType
         self.data = data
 
 
+class S3FileInput__Required(S3FileInput):
+    pass
+
+
+class InferenceExecutionInput(ObjectBase):
+    FIELDS = ["name", "notes", "model", "version", "data_sources", "data_results", "execution_start", ]
+    TYPES = {"name": "String", "notes": "String", "model": "String", "version": "String", "data_sources": "List[ID__Required]", "data_results": "List[ID__Required]", "execution_start": "DateTime__Required"}
+
+    def __init__(self, name: 'String'=None, notes: 'String'=None, model: 'String'=None, version: 'String'=None, data_sources: 'List[ID__Required]'=None, data_results: 'List[ID__Required]'=None, execution_start: 'DateTime__Required'=None):
+        self.name = name
+        self.notes = notes
+        self.model = model
+        self.version = version
+        self.data_sources = data_sources
+        self.data_results = data_results
+        self.execution_start = execution_start
+
+
+class InferenceExecutionInput__Required(InferenceExecutionInput):
+    pass
+
+
 class CascadeLink(ObjectBase):
     FIELDS = ["target_type_name", "target_field_name", "isS3File", ]
-    TYPES = {"target_type_name": "String", "target_field_name": "String", "isS3File": "Boolean"}
+    TYPES = {"target_type_name": "String__Required", "target_field_name": "String__Required", "isS3File": "Boolean"}
 
-    def __init__(self, target_type_name: 'String'=None, target_field_name: 'String'=None, isS3File: 'Boolean'=None):
+    def __init__(self, target_type_name: 'String__Required'=None, target_field_name: 'String__Required'=None, isS3File: 'Boolean'=None):
         self.target_type_name = target_type_name
         self.target_field_name = target_field_name
         self.isS3File = isS3File
 
 
+class CascadeLink__Required(CascadeLink):
+    pass
+
+
 class CoordinateSpaceInput(ObjectBase):
     FIELDS = ["name", "start", "end", ]
-    TYPES = {"name": "String", "start": "DateTime", "end": "DateTime"}
+    TYPES = {"name": "String__Required", "start": "DateTime", "end": "DateTime"}
 
-    def __init__(self, name: 'String'=None, start: 'DateTime'=None, end: 'DateTime'=None):
+    def __init__(self, name: 'String__Required'=None, start: 'DateTime'=None, end: 'DateTime'=None):
         self.name = name
         self.start = start
         self.end = end
 
 
+class CoordinateSpaceInput__Required(CoordinateSpaceInput):
+    pass
+
+
 class TupleInput(ObjectBase):
     FIELDS = ["x", "y", "z", ]
-    TYPES = {"x": "Float", "y": "Float", "z": "Float"}
+    TYPES = {"x": "Float__Required", "y": "Float__Required", "z": "Float__Required"}
 
-    def __init__(self, x: 'Float'=None, y: 'Float'=None, z: 'Float'=None):
+    def __init__(self, x: 'Float__Required'=None, y: 'Float__Required'=None, z: 'Float__Required'=None):
         self.x = x
         self.y = y
         self.z = z
 
 
+class TupleInput__Required(TupleInput):
+    pass
+
+
 class CalibrationInput(ObjectBase):
     FIELDS = ["translation", "rotation", ]
-    TYPES = {"translation": "TupleInput", "rotation": "TupleInput"}
+    TYPES = {"translation": "TupleInput__Required", "rotation": "TupleInput__Required"}
 
-    def __init__(self, translation: 'TupleInput'=None, rotation: 'TupleInput'=None):
+    def __init__(self, translation: 'TupleInput__Required'=None, rotation: 'TupleInput__Required'=None):
         self.translation = translation
         self.rotation = rotation
 
 
+class CalibrationInput__Required(CalibrationInput):
+    pass
+
+
 class PersonInput(ObjectBase):
     FIELDS = ["name", ]
-    TYPES = {"name": "String"}
+    TYPES = {"name": "String__Required"}
 
-    def __init__(self, name: 'String'=None):
+    def __init__(self, name: 'String__Required'=None):
         self.name = name
 
 
+class PersonInput__Required(PersonInput):
+    pass
+
+
 Assignable = Union[Device, Person]
-Observer = Union[Assignment, SensorInstallation]
+Assignable__Required = Union[Device, Person]
+Observer = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
+Observer__Required = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
 GeometricObject = Union[SensorInstallation, CoordinateSpace]
+GeometricObject__Required = Union[SensorInstallation, CoordinateSpace]
 
 
 class Query(QueryBase):
 
-    def devices(self, envId: 'String'=None, page: 'PaginationInput'=None) -> DeviceList:
+    def devices(self, envId: 'String'=None, page: 'PaginationInput'=None) -> DeviceList__Required:
         args = ["envId: 'String'=None", "page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -661,9 +950,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(DeviceList, "devices", variables, var_types)
+        query = self.prepare(DeviceList__Required, "devices", variables, var_types)
         results = self.query(query, variables)
-        return DeviceList.from_json(results.get("devices"))
+        return DeviceList__Required.from_json(results.get("devices"))
 
     def device(self, device_id: 'ID'=None) -> Device:
         args = ["device_id: 'ID'=None"]
@@ -681,7 +970,7 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return Device.from_json(results.get("device"))
 
-    def findDevice(self, name: 'String'=None, part_number: 'String'=None) -> DeviceList:
+    def findDevice(self, name: 'String'=None, part_number: 'String'=None) -> DeviceList__Required:
         args = ["name: 'String'=None", "part_number: 'String'=None"]
         variables = dict()
         var_types = dict()
@@ -700,11 +989,11 @@ class Query(QueryBase):
             else:
                 variables["part_number"] = part_number
 
-        query = self.prepare(DeviceList, "findDevice", variables, var_types)
+        query = self.prepare(DeviceList__Required, "findDevice", variables, var_types)
         results = self.query(query, variables)
-        return DeviceList.from_json(results.get("findDevice"))
+        return DeviceList__Required.from_json(results.get("findDevice"))
 
-    def sensors(self, page: 'PaginationInput'=None) -> SensorList:
+    def sensors(self, page: 'PaginationInput'=None) -> SensorList__Required:
         args = ["page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -716,9 +1005,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(SensorList, "sensors", variables, var_types)
+        query = self.prepare(SensorList__Required, "sensors", variables, var_types)
         results = self.query(query, variables)
-        return SensorList.from_json(results.get("sensors"))
+        return SensorList__Required.from_json(results.get("sensors"))
 
     def sensor(self, sensor_id: 'ID'=None) -> Sensor:
         args = ["sensor_id: 'ID'=None"]
@@ -736,7 +1025,7 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return Sensor.from_json(results.get("sensor"))
 
-    def findSensor(self, name: 'String'=None, version: 'Int'=None) -> SensorList:
+    def findSensor(self, name: 'String'=None, version: 'Int'=None) -> SensorList__Required:
         args = ["name: 'String'=None", "version: 'Int'=None"]
         variables = dict()
         var_types = dict()
@@ -755,11 +1044,11 @@ class Query(QueryBase):
             else:
                 variables["version"] = version
 
-        query = self.prepare(SensorList, "findSensor", variables, var_types)
+        query = self.prepare(SensorList__Required, "findSensor", variables, var_types)
         results = self.query(query, variables)
-        return SensorList.from_json(results.get("findSensor"))
+        return SensorList__Required.from_json(results.get("findSensor"))
 
-    def sensorInstallations(self, page: 'PaginationInput'=None) -> SensorInstallationList:
+    def sensorInstallations(self, page: 'PaginationInput'=None) -> SensorInstallationList__Required:
         args = ["page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -771,9 +1060,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(SensorInstallationList, "sensorInstallations", variables, var_types)
+        query = self.prepare(SensorInstallationList__Required, "sensorInstallations", variables, var_types)
         results = self.query(query, variables)
-        return SensorInstallationList.from_json(results.get("sensorInstallations"))
+        return SensorInstallationList__Required.from_json(results.get("sensorInstallations"))
 
     def environments(self, page: 'PaginationInput'=None) -> EnvironmentList:
         args = ["page: 'PaginationInput'=None"]
@@ -791,13 +1080,13 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return EnvironmentList.from_json(results.get("environments"))
 
-    def getEnvironment(self, environment_id: 'ID'=None) -> Environment:
-        args = ["environment_id: 'ID'=None"]
+    def getEnvironment(self, environment_id: 'ID__Required'=None) -> Environment:
+        args = ["environment_id: 'ID__Required'=None"]
         variables = dict()
         var_types = dict()
 
         if environment_id is not None:
-            var_types["environment_id"] = ID
+            var_types["environment_id"] = ID__Required
             if hasattr(environment_id, "to_json"):
                 variables["environment_id"] = environment_id.to_json()
             else:
@@ -830,7 +1119,7 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return EnvironmentList.from_json(results.get("findEnvironment"))
 
-    def datapoints(self, page: 'PaginationInput'=None) -> DatapointList:
+    def datapoints(self, page: 'PaginationInput'=None) -> DatapointList__Required:
         args = ["page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -842,49 +1131,49 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(DatapointList, "datapoints", variables, var_types)
+        query = self.prepare(DatapointList__Required, "datapoints", variables, var_types)
         results = self.query(query, variables)
-        return DatapointList.from_json(results.get("datapoints"))
+        return DatapointList__Required.from_json(results.get("datapoints"))
 
-    def getDatapoint(self, data_id: 'ID'=None) -> Datapoint:
-        args = ["data_id: 'ID'=None"]
+    def getDatapoint(self, data_id: 'ID__Required'=None) -> Datapoint__Required:
+        args = ["data_id: 'ID__Required'=None"]
         variables = dict()
         var_types = dict()
 
         if data_id is not None:
-            var_types["data_id"] = ID
+            var_types["data_id"] = ID__Required
             if hasattr(data_id, "to_json"):
                 variables["data_id"] = data_id.to_json()
             else:
                 variables["data_id"] = data_id
 
-        query = self.prepare(Datapoint, "getDatapoint", variables, var_types)
+        query = self.prepare(Datapoint__Required, "getDatapoint", variables, var_types)
         results = self.query(query, variables)
-        return Datapoint.from_json(results.get("getDatapoint"))
+        return Datapoint__Required.from_json(results.get("getDatapoint"))
 
-    def findDatapointsForObserver(self, observer: 'ID'=None) -> DatapointList:
-        args = ["observer: 'ID'=None"]
+    def findDatapointsForObserver(self, observer: 'ID__Required'=None) -> DatapointList__Required:
+        args = ["observer: 'ID__Required'=None"]
         variables = dict()
         var_types = dict()
 
         if observer is not None:
-            var_types["observer"] = ID
+            var_types["observer"] = ID__Required
             if hasattr(observer, "to_json"):
                 variables["observer"] = observer.to_json()
             else:
                 variables["observer"] = observer
 
-        query = self.prepare(DatapointList, "findDatapointsForObserver", variables, var_types)
+        query = self.prepare(DatapointList__Required, "findDatapointsForObserver", variables, var_types)
         results = self.query(query, variables)
-        return DatapointList.from_json(results.get("findDatapointsForObserver"))
+        return DatapointList__Required.from_json(results.get("findDatapointsForObserver"))
 
-    def findDatapoints(self, query: 'QueryExpression'=None, page: 'PaginationInput'=None) -> DatapointList:
-        args = ["query: 'QueryExpression'=None", "page: 'PaginationInput'=None"]
+    def findDatapoints(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
+        args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
 
         if query is not None:
-            var_types["query"] = QueryExpression
+            var_types["query"] = QueryExpression__Required
             if hasattr(query, "to_json"):
                 variables["query"] = query.to_json()
             else:
@@ -897,9 +1186,64 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(DatapointList, "findDatapoints", variables, var_types)
+        query = self.prepare(DatapointList__Required, "findDatapoints", variables, var_types)
         results = self.query(query, variables)
-        return DatapointList.from_json(results.get("findDatapoints"))
+        return DatapointList__Required.from_json(results.get("findDatapoints"))
+
+    def inferences(self, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
+        args = ["page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(InferenceExecutionList__Required, "inferences", variables, var_types)
+        results = self.query(query, variables)
+        return InferenceExecutionList__Required.from_json(results.get("inferences"))
+
+    def getInferenceExecution(self, inference_id: 'ID__Required'=None) -> InferenceExecution__Required:
+        args = ["inference_id: 'ID__Required'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if inference_id is not None:
+            var_types["inference_id"] = ID__Required
+            if hasattr(inference_id, "to_json"):
+                variables["inference_id"] = inference_id.to_json()
+            else:
+                variables["inference_id"] = inference_id
+
+        query = self.prepare(InferenceExecution__Required, "getInferenceExecution", variables, var_types)
+        results = self.query(query, variables)
+        return InferenceExecution__Required.from_json(results.get("getInferenceExecution"))
+
+    def findInferences(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
+        args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if query is not None:
+            var_types["query"] = QueryExpression__Required
+            if hasattr(query, "to_json"):
+                variables["query"] = query.to_json()
+            else:
+                variables["query"] = query
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(DatapointList__Required, "findInferences", variables, var_types)
+        results = self.query(query, variables)
+        return DatapointList__Required.from_json(results.get("findInferences"))
 
 
 class Mutation(MutationBase):
@@ -1023,13 +1367,13 @@ class Mutation(MutationBase):
         results = self.query(query, variables)
         return Assignment.from_json(results.get("assignToEnvironment"))
 
-    def updateAssignment(self, assignment_id: 'ID'=None, assignment: 'AssignmentUpdateInput'=None) -> Assignment:
-        args = ["assignment_id: 'ID'=None", "assignment: 'AssignmentUpdateInput'=None"]
+    def updateAssignment(self, assignment_id: 'ID__Required'=None, assignment: 'AssignmentUpdateInput'=None) -> Assignment:
+        args = ["assignment_id: 'ID__Required'=None", "assignment: 'AssignmentUpdateInput'=None"]
         variables = dict()
         var_types = dict()
 
         if assignment_id is not None:
-            var_types["assignment_id"] = ID
+            var_types["assignment_id"] = ID__Required
             if hasattr(assignment_id, "to_json"):
                 variables["assignment_id"] = assignment_id.to_json()
             else:
@@ -1062,13 +1406,13 @@ class Mutation(MutationBase):
         results = self.query(query, variables)
         return Layout.from_json(results.get("createLayout"))
 
-    def updateLayout(self, layout_id: 'ID'=None, layout: 'AssignmentUpdateInput'=None) -> Layout:
-        args = ["layout_id: 'ID'=None", "layout: 'AssignmentUpdateInput'=None"]
+    def updateLayout(self, layout_id: 'ID__Required'=None, layout: 'AssignmentUpdateInput'=None) -> Layout:
+        args = ["layout_id: 'ID__Required'=None", "layout: 'AssignmentUpdateInput'=None"]
         variables = dict()
         var_types = dict()
 
         if layout_id is not None:
-            var_types["layout_id"] = ID
+            var_types["layout_id"] = ID__Required
             if hasattr(layout_id, "to_json"):
                 variables["layout_id"] = layout_id.to_json()
             else:
@@ -1116,3 +1460,19 @@ class Mutation(MutationBase):
         query = self.prepare(DeleteStatusResponse, "deleteDatapoint", variables, var_types)
         results = self.query(query, variables)
         return DeleteStatusResponse.from_json(results.get("deleteDatapoint"))
+
+    def createInferenceExecution(self, inference: 'InferenceExecutionInput'=None) -> InferenceExecution:
+        args = ["inference: 'InferenceExecutionInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if inference is not None:
+            var_types["inference"] = InferenceExecutionInput
+            if hasattr(inference, "to_json"):
+                variables["inference"] = inference.to_json()
+            else:
+                variables["inference"] = inference
+
+        query = self.prepare(InferenceExecution, "createInferenceExecution", variables, var_types)
+        results = self.query(query, variables)
+        return InferenceExecution.from_json(results.get("createInferenceExecution"))
