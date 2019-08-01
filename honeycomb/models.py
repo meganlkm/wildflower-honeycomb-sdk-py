@@ -93,6 +93,63 @@ class Operator(Enum):
 Operator__Required = Operator
 
 
+class SourceType(Enum):
+    TRUTH = "TRUTH"
+    INFERRED = "INFERRED"
+
+    def __str__(self):
+        return str(self.value)
+
+
+SourceType__Required = SourceType
+
+
+class ConcentrationLevel(Enum):
+    DEEP_CONCENTRATION = "DEEP_CONCENTRATION"
+    CONCENTRATION = "CONCENTRATION"
+    DISTRACTED_WORKING = "DISTRACTED_WORKING"
+    QUIESENCE = "QUIESENCE"
+    SLIGHT_DISORDER = "SLIGHT_DISORDER"
+    DISORDER = "DISORDER"
+    UNCONTROLLABLE = "UNCONTROLLABLE"
+
+    def __str__(self):
+        return str(self.value)
+
+
+ConcentrationLevel__Required = ConcentrationLevel
+
+
+class Level(Enum):
+    COMPLETELY = "COMPLETELY"
+    PARTIAL = "PARTIAL"
+    NOT = "NOT"
+
+    def __str__(self):
+        return str(self.value)
+
+
+Level__Required = Level
+
+
+class EngagementType(Enum):
+    W = "W"
+    GL = "GL"
+    GA = "GA"
+    HA = "HA"
+    Wait = "Wait"
+    Wd = "Wd"
+    S = "S"
+    Obs = "Obs"
+    Other = "Other"
+
+    def __str__(self):
+        return str(self.value)
+
+
+EngagementType__Required = EngagementType
+
+
 class Status(Enum):
     ok = "ok"
     error = "error"
@@ -117,6 +174,19 @@ class DataFormat(Enum):
 
 
 DataFormat__Required = DataFormat
+
+
+class ObservationCodes(Enum):
+    ic = "ic"
+    sc = "sc"
+    dc = "dc"
+    ci = "ci"
+
+    def __str__(self):
+        return str(self.value)
+
+
+ObservationCodes__Required = ObservationCodes
 
 
 class Tuple(ObjectBase):
@@ -239,9 +309,9 @@ class DeviceConfiguration__Required(DeviceConfiguration):
 
 class PageInfo(ObjectBase):
     FIELDS = ["total", "count", "max", "cursor", "sort", ]
-    TYPES = {"total": "Int", "count": "Int", "max": "Int", "cursor": "String", "sort": "Sort"}
+    TYPES = {"total": "Int", "count": "Int", "max": "Int", "cursor": "String", "sort": "List[Sort__Required]"}
 
-    def __init__(self, total: 'Int'=None, count: 'Int'=None, max: 'Int'=None, cursor: 'String'=None, sort: 'Sort'=None):
+    def __init__(self, total: 'Int'=None, count: 'Int'=None, max: 'Int'=None, cursor: 'String'=None, sort: 'List[Sort__Required]'=None):
         self.total = total
         self.count = count
         self.max = max
@@ -356,15 +426,14 @@ class Person__Required(Person):
 
 
 class Datapoint(ObjectBase):
-    FIELDS = ["data_id", "parents", "format", "file", "url", "observed_time", "observer", "observers", "duration", "system", ]
-    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "url": "String__Required", "observed_time": "DateTime__Required", "observer": "Observer", "observers": "List[Observer__Required]", "duration": "Int", "system": "System__Required"}
+    FIELDS = ["data_id", "parents", "format", "file", "observed_time", "observer", "observers", "duration", "system", ]
+    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "observed_time": "DateTime__Required", "observer": "Observer", "observers": "List[Observer__Required]", "duration": "Int", "system": "System__Required"}
 
-    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, url: 'String__Required'=None, observed_time: 'DateTime__Required'=None, observer: 'Observer'=None, observers: 'List[Observer__Required]'=None, duration: 'Int'=None, system: 'System__Required'=None):
+    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, observed_time: 'DateTime__Required'=None, observer: 'Observer'=None, observers: 'List[Observer__Required]'=None, duration: 'Int'=None, system: 'System__Required'=None):
         self.data_id = data_id
         self.parents = parents
         self.format = format
         self.file = file
-        self.url = url
         self.observed_time = observed_time
         self.observer = observer
         self.observers = observers
@@ -474,6 +543,120 @@ class InferenceExecutionList(ObjectBase):
 
 
 class InferenceExecutionList__Required(InferenceExecutionList):
+    pass
+
+
+class Material(ObjectBase):
+    FIELDS = ["material_id", "name", "description", "system", ]
+    TYPES = {"material_id": "ID__Required", "name": "String__Required", "description": "String", "system": "System__Required"}
+
+    def __init__(self, material_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, system: 'System__Required'=None):
+        self.material_id = material_id
+        self.name = name
+        self.description = description
+        self.system = system
+
+
+class Material__Required(Material):
+    pass
+
+
+class MaterialList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[Material__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[Material__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class MaterialList__Required(MaterialList):
+    pass
+
+
+class MaterialInteraction(ObjectBase):
+    FIELDS = ["material_interaction_id", "source", "subject", "objects", "start", "duration", "concentration", "engagementType", "validations", "system", ]
+    TYPES = {"material_interaction_id": "ID__Required", "source": "SourceType__Required", "subject": "Person__Required", "objects": "Material", "start": "DateTime__Required", "duration": "Int", "concentration": "ConcentrationInformation__Required", "engagementType": "EngagementType", "validations": "List[InteractionValidation__Required]", "system": "System__Required"}
+
+    def __init__(self, material_interaction_id: 'ID__Required'=None, source: 'SourceType__Required'=None, subject: 'Person__Required'=None, objects: 'Material'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, concentration: 'ConcentrationInformation__Required'=None, engagementType: 'EngagementType'=None, validations: 'List[InteractionValidation__Required]'=None, system: 'System__Required'=None):
+        self.material_interaction_id = material_interaction_id
+        self.source = source
+        self.subject = subject
+        self.objects = objects
+        self.start = start
+        self.duration = duration
+        self.concentration = concentration
+        self.engagementType = engagementType
+        self.validations = validations
+        self.system = system
+
+
+class MaterialInteraction__Required(MaterialInteraction):
+    pass
+
+
+class ConcentrationInformation(ObjectBase):
+    FIELDS = ["concentration_id", "overall", "orientedTowards", "lookingAt", "touching", "distacted", "intentionalActions", "carefulActions", ]
+    TYPES = {"concentration_id": "ID__Required", "overall": "ConcentrationLevel__Required", "orientedTowards": "Level", "lookingAt": "Level", "touching": "Level", "distacted": "Level", "intentionalActions": "Level", "carefulActions": "Level"}
+
+    def __init__(self, concentration_id: 'ID__Required'=None, overall: 'ConcentrationLevel__Required'=None, orientedTowards: 'Level'=None, lookingAt: 'Level'=None, touching: 'Level'=None, distacted: 'Level'=None, intentionalActions: 'Level'=None, carefulActions: 'Level'=None):
+        self.concentration_id = concentration_id
+        self.overall = overall
+        self.orientedTowards = orientedTowards
+        self.lookingAt = lookingAt
+        self.touching = touching
+        self.distacted = distacted
+        self.intentionalActions = intentionalActions
+        self.carefulActions = carefulActions
+
+
+class ConcentrationInformation__Required(ConcentrationInformation):
+    pass
+
+
+class InteractionValidation(ObjectBase):
+    FIELDS = ["interaciton_validation_id", "interaciton", "validator", "validatedAt", "qualityOfInteraction", "system", ]
+    TYPES = {"interaciton_validation_id": "ID__Required", "interaciton": "Interaction__Required", "validator": "Person__Required", "validatedAt": "DateTime__Required", "qualityOfInteraction": "Int__Required", "system": "System__Required"}
+
+    def __init__(self, interaciton_validation_id: 'ID__Required'=None, interaciton: 'Interaction__Required'=None, validator: 'Person__Required'=None, validatedAt: 'DateTime__Required'=None, qualityOfInteraction: 'Int__Required'=None, system: 'System__Required'=None):
+        self.interaciton_validation_id = interaciton_validation_id
+        self.interaciton = interaciton
+        self.validator = validator
+        self.validatedAt = validatedAt
+        self.qualityOfInteraction = qualityOfInteraction
+        self.system = system
+
+
+class InteractionValidation__Required(InteractionValidation):
+    pass
+
+
+class SocialInteraction(ObjectBase):
+    FIELDS = ["social_interaction_id", "source", "subjects", "validations", "system", ]
+    TYPES = {"social_interaction_id": "ID__Required", "source": "SourceType__Required", "subjects": "List[Person__Required]", "validations": "List[InteractionValidation__Required]", "system": "System__Required"}
+
+    def __init__(self, social_interaction_id: 'ID__Required'=None, source: 'SourceType__Required'=None, subjects: 'List[Person__Required]'=None, validations: 'List[InteractionValidation__Required]'=None, system: 'System__Required'=None):
+        self.social_interaction_id = social_interaction_id
+        self.source = source
+        self.subjects = subjects
+        self.validations = validations
+        self.system = system
+
+
+class SocialInteraction__Required(SocialInteraction):
+    pass
+
+
+class MaterialInteractionList(ObjectBase):
+    FIELDS = ["data", "page_info", ]
+    TYPES = {"data": "List[MaterialInteraction__Required]", "page_info": "PageInfo__Required"}
+
+    def __init__(self, data: 'List[MaterialInteraction__Required]'=None, page_info: 'PageInfo__Required'=None):
+        self.data = data
+        self.page_info = page_info
+
+
+class MaterialInteractionList__Required(MaterialInteractionList):
     pass
 
 
@@ -854,6 +1037,55 @@ class InferenceExecutionInput__Required(InferenceExecutionInput):
     pass
 
 
+class MaterialInput(ObjectBase):
+    FIELDS = ["name", "description", ]
+    TYPES = {"name": "String", "description": "String"}
+
+    def __init__(self, name: 'String'=None, description: 'String'=None):
+        self.name = name
+        self.description = description
+
+
+class MaterialInput__Required(MaterialInput):
+    pass
+
+
+class MaterialInteractionInput(ObjectBase):
+    FIELDS = ["source", "subject", "objects", "start", "duration", "concentration", "engagementType", ]
+    TYPES = {"source": "SourceType__Required", "subject": "ID__Required", "objects": "ID__Required", "start": "DateTime__Required", "duration": "Int", "concentration": "ConcentrationInformationInput__Required", "engagementType": "EngagementType"}
+
+    def __init__(self, source: 'SourceType__Required'=None, subject: 'ID__Required'=None, objects: 'ID__Required'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, concentration: 'ConcentrationInformationInput__Required'=None, engagementType: 'EngagementType'=None):
+        self.source = source
+        self.subject = subject
+        self.objects = objects
+        self.start = start
+        self.duration = duration
+        self.concentration = concentration
+        self.engagementType = engagementType
+
+
+class MaterialInteractionInput__Required(MaterialInteractionInput):
+    pass
+
+
+class ConcentrationInformationInput(ObjectBase):
+    FIELDS = ["overall", "orientedTowards", "lookingAt", "touching", "distacted", "intentionalActions", "carefulActions", ]
+    TYPES = {"overall": "ConcentrationLevel__Required", "orientedTowards": "Level", "lookingAt": "Level", "touching": "Level", "distacted": "Level", "intentionalActions": "Level", "carefulActions": "Level"}
+
+    def __init__(self, overall: 'ConcentrationLevel__Required'=None, orientedTowards: 'Level'=None, lookingAt: 'Level'=None, touching: 'Level'=None, distacted: 'Level'=None, intentionalActions: 'Level'=None, carefulActions: 'Level'=None):
+        self.overall = overall
+        self.orientedTowards = orientedTowards
+        self.lookingAt = lookingAt
+        self.touching = touching
+        self.distacted = distacted
+        self.intentionalActions = intentionalActions
+        self.carefulActions = carefulActions
+
+
+class ConcentrationInformationInput__Required(ConcentrationInformationInput):
+    pass
+
+
 class CascadeLink(ObjectBase):
     FIELDS = ["target_type_name", "target_field_name", "isS3File", ]
     TYPES = {"target_type_name": "String__Required", "target_field_name": "String__Required", "isS3File": "Boolean"}
@@ -925,6 +1157,8 @@ Assignable = Union[Device, Person]
 Assignable__Required = Union[Device, Person]
 Observer = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
 Observer__Required = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
+Interaction = Union[MaterialInteraction, SocialInteraction]
+Interaction__Required = Union[MaterialInteraction, SocialInteraction]
 GeometricObject = Union[SensorInstallation, CoordinateSpace]
 GeometricObject__Required = Union[SensorInstallation, CoordinateSpace]
 
@@ -1245,6 +1479,84 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return InferenceExecutionList__Required.from_json(results.get("findInferences"))
 
+    def material(self, material_id: 'ID__Required'=None) -> Material__Required:
+        args = ["material_id: 'ID__Required'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if material_id is not None:
+            var_types["material_id"] = ID__Required
+            if hasattr(material_id, "to_json"):
+                variables["material_id"] = material_id.to_json()
+            else:
+                variables["material_id"] = material_id
+
+        query = self.prepare(Material__Required, "material", variables, var_types)
+        results = self.query(query, variables)
+        return Material__Required.from_json(results.get("material"))
+
+    def materials(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> MaterialList__Required:
+        args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if query is not None:
+            var_types["query"] = QueryExpression__Required
+            if hasattr(query, "to_json"):
+                variables["query"] = query.to_json()
+            else:
+                variables["query"] = query
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(MaterialList__Required, "materials", variables, var_types)
+        results = self.query(query, variables)
+        return MaterialList__Required.from_json(results.get("materials"))
+
+    def materialInteraction(self, material_interaction_id: 'ID__Required'=None) -> MaterialInteraction__Required:
+        args = ["material_interaction_id: 'ID__Required'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if material_interaction_id is not None:
+            var_types["material_interaction_id"] = ID__Required
+            if hasattr(material_interaction_id, "to_json"):
+                variables["material_interaction_id"] = material_interaction_id.to_json()
+            else:
+                variables["material_interaction_id"] = material_interaction_id
+
+        query = self.prepare(MaterialInteraction__Required, "materialInteraction", variables, var_types)
+        results = self.query(query, variables)
+        return MaterialInteraction__Required.from_json(results.get("materialInteraction"))
+
+    def materialInteractions(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> MaterialInteractionList__Required:
+        args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if query is not None:
+            var_types["query"] = QueryExpression__Required
+            if hasattr(query, "to_json"):
+                variables["query"] = query.to_json()
+            else:
+                variables["query"] = query
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(MaterialInteractionList__Required, "materialInteractions", variables, var_types)
+        results = self.query(query, variables)
+        return MaterialInteractionList__Required.from_json(results.get("materialInteractions"))
+
 
 class Mutation(MutationBase):
 
@@ -1263,6 +1575,29 @@ class Mutation(MutationBase):
         query = self.prepare(Device, "createDevice", variables, var_types)
         results = self.query(query, variables)
         return Device.from_json(results.get("createDevice"))
+
+    def updateDevice(self, device_id: 'ID__Required'=None, device: 'DeviceInput'=None) -> Device:
+        args = ["device_id: 'ID__Required'=None", "device: 'DeviceInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if device_id is not None:
+            var_types["device_id"] = ID__Required
+            if hasattr(device_id, "to_json"):
+                variables["device_id"] = device_id.to_json()
+            else:
+                variables["device_id"] = device_id
+
+        if device is not None:
+            var_types["device"] = DeviceInput
+            if hasattr(device, "to_json"):
+                variables["device"] = device.to_json()
+            else:
+                variables["device"] = device
+
+        query = self.prepare(Device, "updateDevice", variables, var_types)
+        results = self.query(query, variables)
+        return Device.from_json(results.get("updateDevice"))
 
     def setDeviceConfiguration(self, deviceConfiguration: 'DeviceConfigurationInput'=None) -> DeviceConfiguration:
         args = ["deviceConfiguration: 'DeviceConfigurationInput'=None"]
@@ -1350,6 +1685,29 @@ class Mutation(MutationBase):
         query = self.prepare(Environment, "createEnvironment", variables, var_types)
         results = self.query(query, variables)
         return Environment.from_json(results.get("createEnvironment"))
+
+    def updateEnvironment(self, environment_id: 'ID__Required'=None, environment: 'EnvironmentInput'=None) -> Environment:
+        args = ["environment_id: 'ID__Required'=None", "environment: 'EnvironmentInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if environment_id is not None:
+            var_types["environment_id"] = ID__Required
+            if hasattr(environment_id, "to_json"):
+                variables["environment_id"] = environment_id.to_json()
+            else:
+                variables["environment_id"] = environment_id
+
+        if environment is not None:
+            var_types["environment"] = EnvironmentInput
+            if hasattr(environment, "to_json"):
+                variables["environment"] = environment.to_json()
+            else:
+                variables["environment"] = environment
+
+        query = self.prepare(Environment, "updateEnvironment", variables, var_types)
+        results = self.query(query, variables)
+        return Environment.from_json(results.get("updateEnvironment"))
 
     def assignToEnvironment(self, assignment: 'AssignmentInput'=None) -> Assignment:
         args = ["assignment: 'AssignmentInput'=None"]
@@ -1476,3 +1834,35 @@ class Mutation(MutationBase):
         query = self.prepare(InferenceExecution, "createInferenceExecution", variables, var_types)
         results = self.query(query, variables)
         return InferenceExecution.from_json(results.get("createInferenceExecution"))
+
+    def createMaterial(self, material: 'MaterialInput'=None) -> Material:
+        args = ["material: 'MaterialInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if material is not None:
+            var_types["material"] = MaterialInput
+            if hasattr(material, "to_json"):
+                variables["material"] = material.to_json()
+            else:
+                variables["material"] = material
+
+        query = self.prepare(Material, "createMaterial", variables, var_types)
+        results = self.query(query, variables)
+        return Material.from_json(results.get("createMaterial"))
+
+    def createMaterialInteraction(self, material_interaction: 'MaterialInteractionInput'=None) -> MaterialInteraction:
+        args = ["material_interaction: 'MaterialInteractionInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if material_interaction is not None:
+            var_types["material_interaction"] = MaterialInteractionInput
+            if hasattr(material_interaction, "to_json"):
+                variables["material_interaction"] = material_interaction.to_json()
+            else:
+                variables["material_interaction"] = material_interaction
+
+        query = self.prepare(MaterialInteraction, "createMaterialInteraction", variables, var_types)
+        results = self.query(query, variables)
+        return MaterialInteraction.from_json(results.get("createMaterialInteraction"))
