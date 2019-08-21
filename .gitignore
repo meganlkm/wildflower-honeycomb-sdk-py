@@ -7,3 +7,5 @@ wildflower_honeycomb\.egg-info/
 \.coverage
 
 wildflower_honeycomb_sdk\.egg-info/
+
+ignore
