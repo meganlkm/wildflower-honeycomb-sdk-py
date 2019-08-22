@@ -4,7 +4,8 @@ QUERIES = {
     "datapoint": {
         "get": """query getDP($data_id: ID!) {
             getDatapoint(data_id: $data_id) {
-            data_id file {key bucketName}}}"""
+            data_id file {key bucketName}}}""",
+        "list": "query {datapoints {data {data_id format}}}"
     }
 }
 

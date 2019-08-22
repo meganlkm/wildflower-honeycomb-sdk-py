@@ -64,7 +64,8 @@ def datapoint_get(ctx, data_id, file_path, file_name):
 @click.pass_context
 def datapoint_list(ctx):
     """list datapoints"""
-    return click.echo('TODO')
+    response = sdk_query(ctx.obj['client'], 'datapoint', 'list')
+    return click.echo(response)
 
 
 @datapoint.command('put')
