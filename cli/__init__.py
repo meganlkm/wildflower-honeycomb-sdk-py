@@ -3,19 +3,9 @@ import os
 import boto3
 import click
 
-from honeycomb import HoneycombClient
+from cli.utils import get_client, sdk_query
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-
-
-def get_client(token_uri, audience, client_id, client_secret, url):
-    client_credentials = {
-        "token_uri": token_uri,
-        "audience": audience,
-        "client_id": client_id,
-        "client_secret": client_secret,
-    }
-    return HoneycombClient(url, client_credentials=client_credentials)
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -44,14 +34,10 @@ def datapoint(ctx):
 @click.pass_context
 def datapoint_get(ctx, data_id, file_path, file_name):
     """get datapoint"""
-    query = """query getDP($data_id: ID!) {
-        getDatapoint(data_id: $data_id) {
-            data_id
-            file {key bucketName}}}"""
     variables = {
         "data_id": data_id
     }
-    response = ctx.obj['client'].raw_query(query, variables)
+    response = sdk_query(ctx.obj['client'], 'datapoint', 'get', variables)
     try:
         bucket = response['getDatapoint']['file']['bucketName']
         key = response['getDatapoint']['file']['key']
@@ -72,3 +58,24 @@ def datapoint_get(ctx, data_id, file_path, file_name):
     s3 = boto3.resource('s3')
     s3.meta.client.download_file(bucket, key, save_path)
     return click.echo('File saved: {}'.format(save_path))
+
+
+@datapoint.command('list')
+@click.pass_context
+def datapoint_list(ctx):
+    """list datapoints"""
+    return click.echo('TODO')
+
+
+@datapoint.command('put')
+@click.pass_context
+def datapoint_put(ctx):
+    """upload datapoint"""
+    return click.echo('TODO')
+
+
+@datapoint.command('delete')
+@click.pass_context
+def datapoint_delete(ctx):
+    """delete datapoint"""
+    return click.echo('TODO')
