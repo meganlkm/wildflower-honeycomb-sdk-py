@@ -50,10 +50,14 @@ def datapoint_get(ctx, data_id):
         "data_id": data_id
     }
     response = ctx.obj['client'].raw_query(query, variables)
-    bucket = response['getDatapoint']['file']['bucketName']
-    key = response['getDatapoint']['file']['key']
-    print('Downloading: {}'.format(os.path.join(bucket, key)))
-    s3 = boto3.resource('s3')
-    file_path = os.path.join(os.getcwd(), '{}-{}'.format(data_id, key.split('/').pop()))
-    s3.meta.client.download_file(bucket, key, file_path)
-    print('File saved: {}'.format(file_path))
+    try:
+        bucket = response['getDatapoint']['file']['bucketName']
+        key = response['getDatapoint']['file']['key']
+        print('Downloading: {}'.format(os.path.join(bucket, key)))
+        s3 = boto3.resource('s3')
+        file_path = os.path.join(os.getcwd(), '{}-{}'.format(data_id, key.split('/').pop()))
+        s3.meta.client.download_file(bucket, key, file_path)
+        print('File saved: {}'.format(file_path))
+    except TypeError:
+        # raise Exception('Datapoint not found.')
+        click.echo('Datapoint not found.', err=True)
