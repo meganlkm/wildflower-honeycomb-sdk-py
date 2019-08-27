@@ -7,3 +7,7 @@ generate-lib:
 publish:
 	python3 setup.py sdist
 	python3 -m twine upload dist/*
+
+install:
+	pip install -e git+https://github.com/WildflowerSchools/graphql-python-client-generator.git#egg=gqlpycgen
+	pip install -e .
