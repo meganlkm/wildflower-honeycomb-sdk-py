@@ -1,9 +1,9 @@
 import os
 
-import boto3
 import click
 
-from cli.utils import get_client, sdk_query
+from cli import datapoint as dp
+from cli.utils import get_client
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -34,49 +34,25 @@ def datapoint(ctx):
 @click.pass_context
 def datapoint_get(ctx, data_id, file_path, file_name):
     """get datapoint"""
-    variables = {
-        "data_id": data_id
-    }
-    response = sdk_query(ctx.obj['client'], 'datapoint', 'get', variables)
-    try:
-        bucket = response['getDatapoint']['file']['bucketName']
-        key = response['getDatapoint']['file']['key']
-    except TypeError:
-        # raise Exception('Datapoint not found.')
-        return click.echo('Datapoint not found.', err=True)
-
-    click.echo('Downloading: {}'.format(os.path.join(bucket, key)))
-    if not file_path:
-        file_path = os.getcwd()
-    if not file_name:
-        file_name = '{}-{}'.format(data_id, key.split('/').pop())
-    file_ext = key.split('.').pop()
-    if not file_name.endswith(file_ext):
-        file_name += '.{}'.format(file_ext)
-    save_path = os.path.join(file_path, file_name)
-
-    s3 = boto3.resource('s3')
-    s3.meta.client.download_file(bucket, key, save_path)
-    return click.echo('File saved: {}'.format(save_path))
+    dp.get(ctx, data_id, file_path, file_name)
 
 
 @datapoint.command('list')
 @click.pass_context
 def datapoint_list(ctx):
     """list datapoints"""
-    response = sdk_query(ctx.obj['client'], 'datapoint', 'list')
-    return click.echo(response)
+    dp.list(ctx)
 
 
 @datapoint.command('put')
 @click.pass_context
 def datapoint_put(ctx):
     """upload datapoint"""
-    return click.echo('TODO')
+    dp.put(ctx)
 
 
 @datapoint.command('delete')
 @click.pass_context
 def datapoint_delete(ctx):
     """delete datapoint"""
-    return click.echo('TODO')
+    dp.delete(ctx)
