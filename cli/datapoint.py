@@ -3,7 +3,7 @@ import os
 import boto3
 import click
 
-from cli.utils import get_client, sdk_query
+from cli.utils import sdk_query
 
 
 def get(ctx, data_id, file_path, file_name):
