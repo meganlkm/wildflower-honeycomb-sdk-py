@@ -72,6 +72,19 @@ class AssignableTypeEnum(Enum):
 AssignableTypeEnum__Required = AssignableTypeEnum
 
 
+class DataSourceType(Enum):
+    GROUND_TRUTH = "GROUND_TRUTH"
+    GENERATED_TEST = "GENERATED_TEST"
+    MEASURED = "MEASURED"
+    INFERRED = "INFERRED"
+
+    def __str__(self):
+        return str(self.value)
+
+
+DataSourceType__Required = DataSourceType
+
+
 class Operator(Enum):
     OR = "OR"
     AND = "AND"
@@ -426,18 +439,18 @@ class Person__Required(Person):
 
 
 class Datapoint(ObjectBase):
-    FIELDS = ["data_id", "parents", "format", "file", "observed_time", "observer", "observers", "duration", "system", ]
-    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "observed_time": "DateTime__Required", "observer": "Observer", "observers": "List[Observer__Required]", "duration": "Int", "system": "System__Required"}
+    FIELDS = ["data_id", "parents", "format", "file", "timestamp", "associations", "duration", "source", "system", ]
+    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "timestamp": "DateTime__Required", "associations": "List[Association__Required]", "duration": "Int", "source": "DataSource__Required", "system": "System__Required"}
 
-    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, observed_time: 'DateTime__Required'=None, observer: 'Observer'=None, observers: 'List[Observer__Required]'=None, duration: 'Int'=None, system: 'System__Required'=None):
+    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, timestamp: 'DateTime__Required'=None, associations: 'List[Association__Required]'=None, duration: 'Int'=None, source: 'DataSource__Required'=None, system: 'System__Required'=None):
         self.data_id = data_id
         self.parents = parents
         self.format = format
         self.file = file
-        self.observed_time = observed_time
-        self.observer = observer
-        self.observers = observers
+        self.timestamp = timestamp
+        self.associations = associations
         self.duration = duration
+        self.source = source
         self.system = system
 
 
@@ -463,6 +476,34 @@ class S3File(ObjectBase):
 
 
 class S3File__Required(S3File):
+    pass
+
+
+class Material(ObjectBase):
+    FIELDS = ["material_id", "name", "description", "system", ]
+    TYPES = {"material_id": "ID__Required", "name": "String__Required", "description": "String", "system": "System__Required"}
+
+    def __init__(self, material_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, system: 'System__Required'=None):
+        self.material_id = material_id
+        self.name = name
+        self.description = description
+        self.system = system
+
+
+class Material__Required(Material):
+    pass
+
+
+class DataSource(ObjectBase):
+    FIELDS = ["type", "source", ]
+    TYPES = {"type": "DataSourceType__Required", "source": "SourceObject"}
+
+    def __init__(self, type: 'DataSourceType__Required'=None, source: 'SourceObject'=None):
+        self.type = type
+        self.source = source
+
+
+class DataSource__Required(DataSource):
     pass
 
 
@@ -543,21 +584,6 @@ class InferenceExecutionList(ObjectBase):
 
 
 class InferenceExecutionList__Required(InferenceExecutionList):
-    pass
-
-
-class Material(ObjectBase):
-    FIELDS = ["material_id", "name", "description", "system", ]
-    TYPES = {"material_id": "ID__Required", "name": "String__Required", "description": "String", "system": "System__Required"}
-
-    def __init__(self, material_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, system: 'System__Required'=None):
-        self.material_id = material_id
-        self.name = name
-        self.description = description
-        self.system = system
-
-
-class Material__Required(Material):
     pass
 
 
@@ -988,17 +1014,17 @@ class RectInput__Required(RectInput):
 
 
 class DatapointInput(ObjectBase):
-    FIELDS = ["format", "file", "observed_time", "observer", "observers", "parents", "duration", ]
-    TYPES = {"format": "String", "file": "S3FileInput", "observed_time": "DateTime__Required", "observer": "ID__Required", "observers": "List[ID__Required]", "parents": "List[ID__Required]", "duration": "Int"}
+    FIELDS = ["format", "file", "timestamp", "associations", "parents", "duration", "source", ]
+    TYPES = {"format": "String", "file": "S3FileInput", "timestamp": "DateTime__Required", "associations": "List[ID__Required]", "parents": "List[ID__Required]", "duration": "Int", "source": "DataSourceInput"}
 
-    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, observed_time: 'DateTime__Required'=None, observer: 'ID__Required'=None, observers: 'List[ID__Required]'=None, parents: 'List[ID__Required]'=None, duration: 'Int'=None):
+    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, timestamp: 'DateTime__Required'=None, associations: 'List[ID__Required]'=None, parents: 'List[ID__Required]'=None, duration: 'Int'=None, source: 'DataSourceInput'=None):
         self.format = format
         self.file = file
-        self.observed_time = observed_time
-        self.observer = observer
-        self.observers = observers
+        self.timestamp = timestamp
+        self.associations = associations
         self.parents = parents
         self.duration = duration
+        self.source = source
 
 
 class DatapointInput__Required(DatapointInput):
@@ -1016,6 +1042,19 @@ class S3FileInput(ObjectBase):
 
 
 class S3FileInput__Required(S3FileInput):
+    pass
+
+
+class DataSourceInput(ObjectBase):
+    FIELDS = ["type", "source", ]
+    TYPES = {"type": "DataSourceType__Required", "source": "ID"}
+
+    def __init__(self, type: 'DataSourceType__Required'=None, source: 'ID'=None):
+        self.type = type
+        self.source = source
+
+
+class DataSourceInput__Required(DataSourceInput):
     pass
 
 
@@ -1155,8 +1194,10 @@ class PersonInput__Required(PersonInput):
 
 Assignable = Union[Device, Person]
 Assignable__Required = Union[Device, Person]
-Observer = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
-Observer__Required = Union[Assignment, SensorInstallation, InferenceExecution, Environment]
+Association = Union[Device, Environment, Person, Material]
+Association__Required = Union[Device, Environment, Person, Material]
+SourceObject = Union[Assignment, InferenceExecution, Person]
+SourceObject__Required = Union[Assignment, InferenceExecution, Person]
 Interaction = Union[MaterialInteraction, SocialInteraction]
 Interaction__Required = Union[MaterialInteraction, SocialInteraction]
 GeometricObject = Union[SensorInstallation, CoordinateSpace]
@@ -1384,22 +1425,6 @@ class Query(QueryBase):
         query = self.prepare(Datapoint__Required, "getDatapoint", variables, var_types)
         results = self.query(query, variables)
         return Datapoint__Required.from_json(results.get("getDatapoint"))
-
-    def findDatapointsForObserver(self, observer: 'ID__Required'=None) -> DatapointList__Required:
-        args = ["observer: 'ID__Required'=None"]
-        variables = dict()
-        var_types = dict()
-
-        if observer is not None:
-            var_types["observer"] = ID__Required
-            if hasattr(observer, "to_json"):
-                variables["observer"] = observer.to_json()
-            else:
-                variables["observer"] = observer
-
-        query = self.prepare(DatapointList__Required, "findDatapointsForObserver", variables, var_types)
-        results = self.query(query, variables)
-        return DatapointList__Required.from_json(results.get("findDatapointsForObserver"))
 
     def findDatapoints(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
         args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
