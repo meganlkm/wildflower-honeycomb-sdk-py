@@ -1,6 +1,8 @@
-requests==2.19.1
-Jinja2==2.10
+boto3==1.9.213
+click==7.0
 gql==0.1.0
+Jinja2==2.10
 PyYAML==3.13
-click==6.7
+requests==2.21.0
+
 gqlpycgen==0.5.5
