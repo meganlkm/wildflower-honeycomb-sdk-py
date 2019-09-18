@@ -9,3 +9,7 @@ wildflower_honeycomb\.egg-info/
 wildflower_honeycomb_sdk\.egg-info/
 
 ignore
+
+dist/
+
+build/
