@@ -45,7 +45,7 @@ class HoneycombMutation(Mutation):
             size
             created
         }
-        observed_time
+        timestamp
         system {
             type_name
             created
