@@ -5,4 +5,4 @@ Jinja2==2.10
 PyYAML==3.13
 requests==2.21.0
 
-gqlpycgen==0.5.5
+gqlpycgen>=0.5.5
