@@ -37,7 +37,7 @@ setup(
     include_package_data=True,
     description='SDK for use with the Wildflower Honeycomb API',
     long_description='Provides uniform access to all aspects of the honeycomb API as well as a direct GraphQL interface for more complex queries.',
-    url='https://github.com/Wildflowerschools/py-honeycomb-sdk',
+    url='https://github.com/WildflowerSchools/wildflower-honeycomb-sdk-py',
     author='optimuspaul',
     author_email='paul.decoursey@wildflowerschools.org',
     install_requires= BASE_DEPENDENCIES,
