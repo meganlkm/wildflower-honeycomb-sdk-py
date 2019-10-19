@@ -3,14 +3,6 @@ from setuptools import setup, find_packages
 
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 VERSION = open(os.path.join(BASEDIR, 'VERSION')).read().strip()
-REQUIREMENTS = []
-
-
-with open(os.path.join(BASEDIR, 'requirements.pip')) as fp:
-    lines = fp.readlines()
-    for line in lines:
-        line = line.strip()
-        REQUIREMENTS.append(line)
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(BASEDIR))
