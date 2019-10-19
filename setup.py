@@ -42,7 +42,7 @@ setup(
     author_email='paul.decoursey@wildflowerschools.org',
     install_requires= BASE_DEPENDENCIES,
     tests_require = TEST_DEPENDENCIES,
-    extra_require = {
+    extras_require = {
         'test': TEST_DEPENDENCIES,
         'local': LOCAL_DEPENDENCIES
     },
