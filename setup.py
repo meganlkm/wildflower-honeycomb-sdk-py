@@ -26,7 +26,15 @@ setup(
     url='https://github.com/Wildflowerschools/py-honeycomb-sdk',
     author='optimuspaul',
     author_email='paul.decoursey@wildflowerschools.org',
-    install_requires=REQUIREMENTS,
+    install_requires= [
+        'wf-gqlpycgen>=0.5.7',
+        'requests>=2.21',
+        'Jinja2>=2.10',
+        'gql>=0.1.0',
+        'PyYAML>=3.13',
+        'click>=6.7',
+        'boto3>=1.9.213'
+    ]
     entry_points={
         'console_scripts': [
             'honeycomb=cli:cli',
