@@ -23,6 +23,11 @@ test_dependencies = [
     'httpretty==0.8.14'
 ]
 
+local_dependencies = [
+    'tox==2.6.0',
+    'tox-pyenv==1.0.3'
+]
+
 setup(
     name='wildflower-honeycomb-sdk',
     version=VERSION,
@@ -41,11 +46,12 @@ setup(
         'PyYAML>=3.13',
         'click>=6.7',
         'boto3>=1.9.213'
-    ]
+    ],
     tests_require = test_dependencies,
     extra_require = {
-        'test': test_dependencies
-    }
+        'test': test_dependencies,
+        'local': local_dependencies
+    },
     entry_points={
         'console_scripts': [
             'honeycomb=cli:cli',
