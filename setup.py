@@ -15,6 +15,13 @@ with open(os.path.join(BASEDIR, 'requirements.pip')) as fp:
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(BASEDIR))
 
+test_dependencies = [
+    'pytest==3.0.6',
+    'pytest-cov==2.4.0',
+    'pytest-mock==1.5.0',
+    'pylint==1.6.5',
+    'httpretty==0.8.14'
+]
 
 setup(
     name='wildflower-honeycomb-sdk',
@@ -35,6 +42,10 @@ setup(
         'click>=6.7',
         'boto3>=1.9.213'
     ]
+    tests_require = test_dependencies,
+    extra_require = {
+        'test': test_dependencies
+    }
     entry_points={
         'console_scripts': [
             'honeycomb=cli:cli',
