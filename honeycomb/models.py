@@ -117,6 +117,19 @@ class SourceType(Enum):
 SourceType__Required = SourceType
 
 
+class ObservationCodes(Enum):
+    ic = "ic"
+    sc = "sc"
+    dc = "dc"
+    ci = "ci"
+
+    def __str__(self):
+        return str(self.value)
+
+
+ObservationCodes__Required = ObservationCodes
+
+
 class ConcentrationLevel(Enum):
     DEEP_CONCENTRATION = "DEEP_CONCENTRATION"
     CONCENTRATION = "CONCENTRATION"
@@ -174,32 +187,28 @@ class Status(Enum):
 Status__Required = Status
 
 
-class DataFormat(Enum):
-    BINARY = "BINARY"
-    CSV = "CSV"
-    IMAGE = "IMAGE"
-    JSON = "JSON"
-    TEXT = "TEXT"
-    VIDEO = "VIDEO"
+class TableType(Enum):
+    jsonb = "jsonb"
+    native = "native"
 
     def __str__(self):
         return str(self.value)
 
 
-DataFormat__Required = DataFormat
+TableType__Required = TableType
 
 
-class ObservationCodes(Enum):
-    ic = "ic"
-    sc = "sc"
-    dc = "dc"
-    ci = "ci"
+class NativeIndexType(Enum):
+    btree = "btree"
+    hash = "hash"
+    gist = "gist"
+    gin = "gin"
 
     def __str__(self):
         return str(self.value)
 
 
-ObservationCodes__Required = ObservationCodes
+NativeIndexType__Required = NativeIndexType
 
 
 class Tuple(ObjectBase):
@@ -230,10 +239,10 @@ class DeviceList__Required(DeviceList):
 
 
 class Device(ObjectBase):
-    FIELDS = ["device_id", "part_number", "name", "tag_id", "serial_number", "mac_address", "description", "sensors", "configurations", "system", ]
-    TYPES = {"device_id": "ID__Required", "part_number": "String", "name": "String__Required", "tag_id": "String", "serial_number": "String", "mac_address": "List[String__Required]", "description": "String", "sensors": "List[SensorInstallation__Required]", "configurations": "List[DeviceConfiguration__Required]", "system": "System__Required"}
+    FIELDS = ["device_id", "part_number", "name", "tag_id", "serial_number", "mac_address", "description", "sensors", "configurations", "assignments", "system", ]
+    TYPES = {"device_id": "ID__Required", "part_number": "String", "name": "String__Required", "tag_id": "String", "serial_number": "String", "mac_address": "List[String__Required]", "description": "String", "sensors": "List[SensorInstallation__Required]", "configurations": "List[DeviceConfiguration__Required]", "assignments": "List[Assignment__Required]", "system": "System__Required"}
 
-    def __init__(self, device_id: 'ID__Required'=None, part_number: 'String'=None, name: 'String__Required'=None, tag_id: 'String'=None, serial_number: 'String'=None, mac_address: 'List[String__Required]'=None, description: 'String'=None, sensors: 'List[SensorInstallation__Required]'=None, configurations: 'List[DeviceConfiguration__Required]'=None, system: 'System__Required'=None):
+    def __init__(self, device_id: 'ID__Required'=None, part_number: 'String'=None, name: 'String__Required'=None, tag_id: 'String'=None, serial_number: 'String'=None, mac_address: 'List[String__Required]'=None, description: 'String'=None, sensors: 'List[SensorInstallation__Required]'=None, configurations: 'List[DeviceConfiguration__Required]'=None, assignments: 'List[Assignment__Required]'=None, system: 'System__Required'=None):
         self.device_id = device_id
         self.part_number = part_number
         self.name = name
@@ -243,6 +252,7 @@ class Device(ObjectBase):
         self.description = description
         self.sensors = sensors
         self.configurations = configurations
+        self.assignments = assignments
         self.system = system
 
 
@@ -320,6 +330,169 @@ class DeviceConfiguration__Required(DeviceConfiguration):
     pass
 
 
+class Assignment(ObjectBase):
+    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "data", "system", ]
+    TYPES = {"assignment_id": "ID__Required", "environment": "Environment__Required", "assigned": "Assignable__Required", "assigned_type": "AssignableTypeEnum__Required", "start": "DateTime__Required", "end": "DateTime", "data": "List[Datapoint__Required]", "system": "System__Required"}
+
+    def __init__(self, assignment_id: 'ID__Required'=None, environment: 'Environment__Required'=None, assigned: 'Assignable__Required'=None, assigned_type: 'AssignableTypeEnum__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, data: 'List[Datapoint__Required]'=None, system: 'System__Required'=None):
+        self.assignment_id = assignment_id
+        self.environment = environment
+        self.assigned = assigned
+        self.assigned_type = assigned_type
+        self.start = start
+        self.end = end
+        self.data = data
+        self.system = system
+
+
+class Assignment__Required(Assignment):
+    pass
+
+
+class Environment(ObjectBase):
+    FIELDS = ["environment_id", "name", "description", "location", "assignments", "layouts", "system", ]
+    TYPES = {"environment_id": "ID__Required", "name": "String__Required", "description": "String", "location": "String", "assignments": "List[Assignment__Required]", "layouts": "List[Layout__Required]", "system": "System__Required"}
+
+    def __init__(self, environment_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment__Required]'=None, layouts: 'List[Layout__Required]'=None, system: 'System__Required'=None):
+        self.environment_id = environment_id
+        self.name = name
+        self.description = description
+        self.location = location
+        self.assignments = assignments
+        self.layouts = layouts
+        self.system = system
+
+
+class Environment__Required(Environment):
+    pass
+
+
+class Layout(ObjectBase):
+    FIELDS = ["layout_id", "environment", "spaces", "objects", "start", "end", "system", ]
+    TYPES = {"layout_id": "ID__Required", "environment": "Environment__Required", "spaces": "List[Rect__Required]", "objects": "List[Rect__Required]", "start": "DateTime", "end": "DateTime", "system": "System__Required"}
+
+    def __init__(self, layout_id: 'ID__Required'=None, environment: 'Environment__Required'=None, spaces: 'List[Rect__Required]'=None, objects: 'List[Rect__Required]'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System__Required'=None):
+        self.layout_id = layout_id
+        self.environment = environment
+        self.spaces = spaces
+        self.objects = objects
+        self.start = start
+        self.end = end
+        self.system = system
+
+
+class Layout__Required(Layout):
+    pass
+
+
+class Rect(ObjectBase):
+    FIELDS = ["name", "x", "y", "width", "height", ]
+    TYPES = {"name": "String", "x": "Int__Required", "y": "Int__Required", "width": "Int__Required", "height": "Int__Required"}
+
+    def __init__(self, name: 'String'=None, x: 'Int__Required'=None, y: 'Int__Required'=None, width: 'Int__Required'=None, height: 'Int__Required'=None):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+class Rect__Required(Rect):
+    pass
+
+
+class Person(ObjectBase):
+    FIELDS = ["person_id", "name", "system", ]
+    TYPES = {"person_id": "ID__Required", "name": "String__Required", "system": "System__Required"}
+
+    def __init__(self, person_id: 'ID__Required'=None, name: 'String__Required'=None, system: 'System__Required'=None):
+        self.person_id = person_id
+        self.name = name
+        self.system = system
+
+
+class Person__Required(Person):
+    pass
+
+
+class Datapoint(ObjectBase):
+    FIELDS = ["data_id", "parents", "format", "file", "timestamp", "associations", "duration", "source", "source_type", "tags", "system", ]
+    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "timestamp": "DateTime__Required", "associations": "List[Association__Required]", "duration": "Int", "source": "SourceObject", "source_type": "DataSourceType", "tags": "List[String__Required]", "system": "System__Required"}
+
+    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, timestamp: 'DateTime__Required'=None, associations: 'List[Association__Required]'=None, duration: 'Int'=None, source: 'SourceObject'=None, source_type: 'DataSourceType'=None, tags: 'List[String__Required]'=None, system: 'System__Required'=None):
+        self.data_id = data_id
+        self.parents = parents
+        self.format = format
+        self.file = file
+        self.timestamp = timestamp
+        self.associations = associations
+        self.duration = duration
+        self.source = source
+        self.source_type = source_type
+        self.tags = tags
+        self.system = system
+
+
+class Datapoint__Required(Datapoint):
+    pass
+
+
+class S3File(ObjectBase):
+    FIELDS = ["name", "bucketName", "key", "data", "filename", "mime", "encoding", "contentType", "size", "created", ]
+    TYPES = {"name": "String", "bucketName": "String__Required", "key": "String__Required", "data": "String__Required", "filename": "String", "mime": "String", "encoding": "String", "contentType": "String__Required", "size": "Int", "created": "String__Required"}
+
+    def __init__(self, name: 'String'=None, bucketName: 'String__Required'=None, key: 'String__Required'=None, data: 'String__Required'=None, filename: 'String'=None, mime: 'String'=None, encoding: 'String'=None, contentType: 'String__Required'=None, size: 'Int'=None, created: 'String__Required'=None):
+        self.name = name
+        self.bucketName = bucketName
+        self.key = key
+        self.data = data
+        self.filename = filename
+        self.mime = mime
+        self.encoding = encoding
+        self.contentType = contentType
+        self.size = size
+        self.created = created
+
+
+class S3File__Required(S3File):
+    pass
+
+
+class Material(ObjectBase):
+    FIELDS = ["material_id", "name", "description", "system", ]
+    TYPES = {"material_id": "ID__Required", "name": "String__Required", "description": "String", "system": "System__Required"}
+
+    def __init__(self, material_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, system: 'System__Required'=None):
+        self.material_id = material_id
+        self.name = name
+        self.description = description
+        self.system = system
+
+
+class Material__Required(Material):
+    pass
+
+
+class InferenceExecution(ObjectBase):
+    FIELDS = ["inference_id", "name", "notes", "model", "version", "data_sources", "data_results", "execution_start", "system", ]
+    TYPES = {"inference_id": "ID__Required", "name": "String", "notes": "String", "model": "String", "version": "String", "data_sources": "List[Datapoint__Required]", "data_results": "List[Datapoint__Required]", "execution_start": "DateTime__Required", "system": "System__Required"}
+
+    def __init__(self, inference_id: 'ID__Required'=None, name: 'String'=None, notes: 'String'=None, model: 'String'=None, version: 'String'=None, data_sources: 'List[Datapoint__Required]'=None, data_results: 'List[Datapoint__Required]'=None, execution_start: 'DateTime__Required'=None, system: 'System__Required'=None):
+        self.inference_id = inference_id
+        self.name = name
+        self.notes = notes
+        self.model = model
+        self.version = version
+        self.data_sources = data_sources
+        self.data_results = data_results
+        self.execution_start = execution_start
+        self.system = system
+
+
+class InferenceExecution__Required(InferenceExecution):
+    pass
+
+
 class PageInfo(ObjectBase):
     FIELDS = ["total", "count", "max", "cursor", "sort", ]
     TYPES = {"total": "Int", "count": "Int", "max": "Int", "cursor": "String", "sort": "List[Sort__Required]"}
@@ -388,179 +561,6 @@ class EnvironmentList__Required(EnvironmentList):
     pass
 
 
-class Environment(ObjectBase):
-    FIELDS = ["environment_id", "name", "description", "location", "assignments", "layouts", "system", ]
-    TYPES = {"environment_id": "ID__Required", "name": "String__Required", "description": "String", "location": "String", "assignments": "List[Assignment__Required]", "layouts": "List[Layout__Required]", "system": "System__Required"}
-
-    def __init__(self, environment_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, location: 'String'=None, assignments: 'List[Assignment__Required]'=None, layouts: 'List[Layout__Required]'=None, system: 'System__Required'=None):
-        self.environment_id = environment_id
-        self.name = name
-        self.description = description
-        self.location = location
-        self.assignments = assignments
-        self.layouts = layouts
-        self.system = system
-
-
-class Environment__Required(Environment):
-    pass
-
-
-class Assignment(ObjectBase):
-    FIELDS = ["assignment_id", "environment", "assigned", "assigned_type", "start", "end", "data", "system", ]
-    TYPES = {"assignment_id": "ID__Required", "environment": "Environment__Required", "assigned": "Assignable__Required", "assigned_type": "AssignableTypeEnum__Required", "start": "DateTime__Required", "end": "DateTime", "data": "List[Datapoint__Required]", "system": "System__Required"}
-
-    def __init__(self, assignment_id: 'ID__Required'=None, environment: 'Environment__Required'=None, assigned: 'Assignable__Required'=None, assigned_type: 'AssignableTypeEnum__Required'=None, start: 'DateTime__Required'=None, end: 'DateTime'=None, data: 'List[Datapoint__Required]'=None, system: 'System__Required'=None):
-        self.assignment_id = assignment_id
-        self.environment = environment
-        self.assigned = assigned
-        self.assigned_type = assigned_type
-        self.start = start
-        self.end = end
-        self.data = data
-        self.system = system
-
-
-class Assignment__Required(Assignment):
-    pass
-
-
-class Person(ObjectBase):
-    FIELDS = ["person_id", "name", ]
-    TYPES = {"person_id": "ID__Required", "name": "String__Required"}
-
-    def __init__(self, person_id: 'ID__Required'=None, name: 'String__Required'=None):
-        self.person_id = person_id
-        self.name = name
-
-
-class Person__Required(Person):
-    pass
-
-
-class Datapoint(ObjectBase):
-    FIELDS = ["data_id", "parents", "format", "file", "timestamp", "associations", "duration", "source", "system", ]
-    TYPES = {"data_id": "ID__Required", "parents": "List[Datapoint]", "format": "String", "file": "S3File", "timestamp": "DateTime__Required", "associations": "List[Association__Required]", "duration": "Int", "source": "DataSource__Required", "system": "System__Required"}
-
-    def __init__(self, data_id: 'ID__Required'=None, parents: 'List[Datapoint]'=None, format: 'String'=None, file: 'S3File'=None, timestamp: 'DateTime__Required'=None, associations: 'List[Association__Required]'=None, duration: 'Int'=None, source: 'DataSource__Required'=None, system: 'System__Required'=None):
-        self.data_id = data_id
-        self.parents = parents
-        self.format = format
-        self.file = file
-        self.timestamp = timestamp
-        self.associations = associations
-        self.duration = duration
-        self.source = source
-        self.system = system
-
-
-class Datapoint__Required(Datapoint):
-    pass
-
-
-class S3File(ObjectBase):
-    FIELDS = ["name", "bucketName", "key", "data", "filename", "mime", "encoding", "contentType", "size", "created", ]
-    TYPES = {"name": "String", "bucketName": "String__Required", "key": "String__Required", "data": "String__Required", "filename": "String", "mime": "String", "encoding": "String", "contentType": "String__Required", "size": "Int", "created": "String__Required"}
-
-    def __init__(self, name: 'String'=None, bucketName: 'String__Required'=None, key: 'String__Required'=None, data: 'String__Required'=None, filename: 'String'=None, mime: 'String'=None, encoding: 'String'=None, contentType: 'String__Required'=None, size: 'Int'=None, created: 'String__Required'=None):
-        self.name = name
-        self.bucketName = bucketName
-        self.key = key
-        self.data = data
-        self.filename = filename
-        self.mime = mime
-        self.encoding = encoding
-        self.contentType = contentType
-        self.size = size
-        self.created = created
-
-
-class S3File__Required(S3File):
-    pass
-
-
-class Material(ObjectBase):
-    FIELDS = ["material_id", "name", "description", "system", ]
-    TYPES = {"material_id": "ID__Required", "name": "String__Required", "description": "String", "system": "System__Required"}
-
-    def __init__(self, material_id: 'ID__Required'=None, name: 'String__Required'=None, description: 'String'=None, system: 'System__Required'=None):
-        self.material_id = material_id
-        self.name = name
-        self.description = description
-        self.system = system
-
-
-class Material__Required(Material):
-    pass
-
-
-class DataSource(ObjectBase):
-    FIELDS = ["type", "source", ]
-    TYPES = {"type": "DataSourceType__Required", "source": "SourceObject"}
-
-    def __init__(self, type: 'DataSourceType__Required'=None, source: 'SourceObject'=None):
-        self.type = type
-        self.source = source
-
-
-class DataSource__Required(DataSource):
-    pass
-
-
-class InferenceExecution(ObjectBase):
-    FIELDS = ["inference_id", "name", "notes", "model", "version", "data_sources", "data_results", "execution_start", "system", ]
-    TYPES = {"inference_id": "ID__Required", "name": "String", "notes": "String", "model": "String", "version": "String", "data_sources": "List[Datapoint__Required]", "data_results": "List[Datapoint__Required]", "execution_start": "DateTime__Required", "system": "System__Required"}
-
-    def __init__(self, inference_id: 'ID__Required'=None, name: 'String'=None, notes: 'String'=None, model: 'String'=None, version: 'String'=None, data_sources: 'List[Datapoint__Required]'=None, data_results: 'List[Datapoint__Required]'=None, execution_start: 'DateTime__Required'=None, system: 'System__Required'=None):
-        self.inference_id = inference_id
-        self.name = name
-        self.notes = notes
-        self.model = model
-        self.version = version
-        self.data_sources = data_sources
-        self.data_results = data_results
-        self.execution_start = execution_start
-        self.system = system
-
-
-class InferenceExecution__Required(InferenceExecution):
-    pass
-
-
-class Layout(ObjectBase):
-    FIELDS = ["layout_id", "environment", "spaces", "objects", "start", "end", "system", ]
-    TYPES = {"layout_id": "ID__Required", "environment": "Environment__Required", "spaces": "List[Rect__Required]", "objects": "List[Rect__Required]", "start": "DateTime", "end": "DateTime", "system": "System__Required"}
-
-    def __init__(self, layout_id: 'ID__Required'=None, environment: 'Environment__Required'=None, spaces: 'List[Rect__Required]'=None, objects: 'List[Rect__Required]'=None, start: 'DateTime'=None, end: 'DateTime'=None, system: 'System__Required'=None):
-        self.layout_id = layout_id
-        self.environment = environment
-        self.spaces = spaces
-        self.objects = objects
-        self.start = start
-        self.end = end
-        self.system = system
-
-
-class Layout__Required(Layout):
-    pass
-
-
-class Rect(ObjectBase):
-    FIELDS = ["name", "x", "y", "width", "height", ]
-    TYPES = {"name": "String", "x": "Int__Required", "y": "Int__Required", "width": "Int__Required", "height": "Int__Required"}
-
-    def __init__(self, name: 'String'=None, x: 'Int__Required'=None, y: 'Int__Required'=None, width: 'Int__Required'=None, height: 'Int__Required'=None):
-        self.name = name
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-
-
-class Rect__Required(Rect):
-    pass
-
-
 class DatapointList(ObjectBase):
     FIELDS = ["data", "page_info", ]
     TYPES = {"data": "List[Datapoint__Required]", "page_info": "PageInfo__Required"}
@@ -601,16 +601,17 @@ class MaterialList__Required(MaterialList):
 
 
 class MaterialInteraction(ObjectBase):
-    FIELDS = ["material_interaction_id", "source", "subject", "objects", "start", "duration", "concentration", "engagementType", "validations", "system", ]
-    TYPES = {"material_interaction_id": "ID__Required", "source": "SourceType__Required", "subject": "Person__Required", "objects": "Material", "start": "DateTime__Required", "duration": "Int", "concentration": "ConcentrationInformation__Required", "engagementType": "EngagementType", "validations": "List[InteractionValidation__Required]", "system": "System__Required"}
+    FIELDS = ["material_interaction_id", "source", "subject", "object", "start", "duration", "code", "concentration", "engagementType", "validations", "system", ]
+    TYPES = {"material_interaction_id": "ID__Required", "source": "SourceType__Required", "subject": "Person__Required", "object": "Material", "start": "DateTime__Required", "duration": "Int", "code": "ObservationCodes", "concentration": "ConcentrationInformation__Required", "engagementType": "EngagementType", "validations": "List[InteractionValidation__Required]", "system": "System__Required"}
 
-    def __init__(self, material_interaction_id: 'ID__Required'=None, source: 'SourceType__Required'=None, subject: 'Person__Required'=None, objects: 'Material'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, concentration: 'ConcentrationInformation__Required'=None, engagementType: 'EngagementType'=None, validations: 'List[InteractionValidation__Required]'=None, system: 'System__Required'=None):
+    def __init__(self, material_interaction_id: 'ID__Required'=None, source: 'SourceType__Required'=None, subject: 'Person__Required'=None, object: 'Material'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, code: 'ObservationCodes'=None, concentration: 'ConcentrationInformation__Required'=None, engagementType: 'EngagementType'=None, validations: 'List[InteractionValidation__Required]'=None, system: 'System__Required'=None):
         self.material_interaction_id = material_interaction_id
         self.source = source
         self.subject = subject
-        self.objects = objects
+        self.object = object
         self.start = start
         self.duration = duration
+        self.code = code
         self.concentration = concentration
         self.engagementType = engagementType
         self.validations = validations
@@ -1013,11 +1014,23 @@ class RectInput__Required(RectInput):
     pass
 
 
-class DatapointInput(ObjectBase):
-    FIELDS = ["format", "file", "timestamp", "associations", "parents", "duration", "source", ]
-    TYPES = {"format": "String", "file": "S3FileInput", "timestamp": "DateTime__Required", "associations": "List[ID__Required]", "parents": "List[ID__Required]", "duration": "Int", "source": "DataSourceInput"}
+class PersonInput(ObjectBase):
+    FIELDS = ["name", ]
+    TYPES = {"name": "String__Required"}
 
-    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, timestamp: 'DateTime__Required'=None, associations: 'List[ID__Required]'=None, parents: 'List[ID__Required]'=None, duration: 'Int'=None, source: 'DataSourceInput'=None):
+    def __init__(self, name: 'String__Required'=None):
+        self.name = name
+
+
+class PersonInput__Required(PersonInput):
+    pass
+
+
+class DatapointInput(ObjectBase):
+    FIELDS = ["format", "file", "timestamp", "associations", "parents", "duration", "source", "source_type", "tags", ]
+    TYPES = {"format": "String", "file": "S3FileInput", "timestamp": "DateTime__Required", "associations": "List[ID__Required]", "parents": "List[ID__Required]", "duration": "Int", "source": "ID", "source_type": "DataSourceType__Required", "tags": "List[String__Required]"}
+
+    def __init__(self, format: 'String'=None, file: 'S3FileInput'=None, timestamp: 'DateTime__Required'=None, associations: 'List[ID__Required]'=None, parents: 'List[ID__Required]'=None, duration: 'Int'=None, source: 'ID'=None, source_type: 'DataSourceType__Required'=None, tags: 'List[String__Required]'=None):
         self.format = format
         self.file = file
         self.timestamp = timestamp
@@ -1025,6 +1038,8 @@ class DatapointInput(ObjectBase):
         self.parents = parents
         self.duration = duration
         self.source = source
+        self.source_type = source_type
+        self.tags = tags
 
 
 class DatapointInput__Required(DatapointInput):
@@ -1042,19 +1057,6 @@ class S3FileInput(ObjectBase):
 
 
 class S3FileInput__Required(S3FileInput):
-    pass
-
-
-class DataSourceInput(ObjectBase):
-    FIELDS = ["type", "source", ]
-    TYPES = {"type": "DataSourceType__Required", "source": "ID"}
-
-    def __init__(self, type: 'DataSourceType__Required'=None, source: 'ID'=None):
-        self.type = type
-        self.source = source
-
-
-class DataSourceInput__Required(DataSourceInput):
     pass
 
 
@@ -1090,13 +1092,14 @@ class MaterialInput__Required(MaterialInput):
 
 
 class MaterialInteractionInput(ObjectBase):
-    FIELDS = ["source", "subject", "objects", "start", "duration", "concentration", "engagementType", ]
-    TYPES = {"source": "SourceType__Required", "subject": "ID__Required", "objects": "ID__Required", "start": "DateTime__Required", "duration": "Int", "concentration": "ConcentrationInformationInput__Required", "engagementType": "EngagementType"}
+    FIELDS = ["source", "subject", "object", "code", "start", "duration", "concentration", "engagementType", ]
+    TYPES = {"source": "SourceType__Required", "subject": "ID__Required", "object": "ID__Required", "code": "ObservationCodes", "start": "DateTime__Required", "duration": "Int", "concentration": "ConcentrationInformationInput", "engagementType": "EngagementType"}
 
-    def __init__(self, source: 'SourceType__Required'=None, subject: 'ID__Required'=None, objects: 'ID__Required'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, concentration: 'ConcentrationInformationInput__Required'=None, engagementType: 'EngagementType'=None):
+    def __init__(self, source: 'SourceType__Required'=None, subject: 'ID__Required'=None, object: 'ID__Required'=None, code: 'ObservationCodes'=None, start: 'DateTime__Required'=None, duration: 'Int'=None, concentration: 'ConcentrationInformationInput'=None, engagementType: 'EngagementType'=None):
         self.source = source
         self.subject = subject
-        self.objects = objects
+        self.object = object
+        self.code = code
         self.start = start
         self.duration = duration
         self.concentration = concentration
@@ -1122,6 +1125,20 @@ class ConcentrationInformationInput(ObjectBase):
 
 
 class ConcentrationInformationInput__Required(ConcentrationInformationInput):
+    pass
+
+
+class NativeIndex(ObjectBase):
+    FIELDS = ["name", "type", "columns", ]
+    TYPES = {"name": "String__Required", "type": "NativeIndexType__Required", "columns": "List[String__Required]"}
+
+    def __init__(self, name: 'String__Required'=None, type: 'NativeIndexType__Required'=None, columns: 'List[String__Required]'=None):
+        self.name = name
+        self.type = type
+        self.columns = columns
+
+
+class NativeIndex__Required(NativeIndex):
     pass
 
 
@@ -1177,18 +1194,6 @@ class CalibrationInput(ObjectBase):
 
 
 class CalibrationInput__Required(CalibrationInput):
-    pass
-
-
-class PersonInput(ObjectBase):
-    FIELDS = ["name", ]
-    TYPES = {"name": "String__Required"}
-
-    def __init__(self, name: 'String__Required'=None):
-        self.name = name
-
-
-class PersonInput__Required(PersonInput):
     pass
 
 
@@ -1410,7 +1415,7 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return DatapointList__Required.from_json(results.get("datapoints"))
 
-    def getDatapoint(self, data_id: 'ID__Required'=None) -> Datapoint__Required:
+    def getDatapoint(self, data_id: 'ID__Required'=None) -> Datapoint:
         args = ["data_id: 'ID__Required'=None"]
         variables = dict()
         var_types = dict()
@@ -1422,11 +1427,11 @@ class Query(QueryBase):
             else:
                 variables["data_id"] = data_id
 
-        query = self.prepare(Datapoint__Required, "getDatapoint", variables, var_types)
+        query = self.prepare(Datapoint, "getDatapoint", variables, var_types)
         results = self.query(query, variables)
-        return Datapoint__Required.from_json(results.get("getDatapoint"))
+        return Datapoint.from_json(results.get("getDatapoint"))
 
-    def findDatapoints(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
+    def searchDatapoints(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> DatapointList__Required:
         args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -1445,11 +1450,11 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(DatapointList__Required, "findDatapoints", variables, var_types)
+        query = self.prepare(DatapointList__Required, "searchDatapoints", variables, var_types)
         results = self.query(query, variables)
-        return DatapointList__Required.from_json(results.get("findDatapoints"))
+        return DatapointList__Required.from_json(results.get("searchDatapoints"))
 
-    def inferences(self, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
+    def inferenceExecutions(self, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
         args = ["page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -1461,9 +1466,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(InferenceExecutionList__Required, "inferences", variables, var_types)
+        query = self.prepare(InferenceExecutionList__Required, "inferenceExecutions", variables, var_types)
         results = self.query(query, variables)
-        return InferenceExecutionList__Required.from_json(results.get("inferences"))
+        return InferenceExecutionList__Required.from_json(results.get("inferenceExecutions"))
 
     def getInferenceExecution(self, inference_id: 'ID__Required'=None) -> InferenceExecution__Required:
         args = ["inference_id: 'ID__Required'=None"]
@@ -1481,7 +1486,44 @@ class Query(QueryBase):
         results = self.query(query, variables)
         return InferenceExecution__Required.from_json(results.get("getInferenceExecution"))
 
-    def findInferences(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
+    def findInferenceExecutions(self, model: 'String'=None, version: 'String'=None, name: 'String'=None, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
+        args = ["model: 'String'=None", "version: 'String'=None", "name: 'String'=None", "page: 'PaginationInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if model is not None:
+            var_types["model"] = String
+            if hasattr(model, "to_json"):
+                variables["model"] = model.to_json()
+            else:
+                variables["model"] = model
+
+        if version is not None:
+            var_types["version"] = String
+            if hasattr(version, "to_json"):
+                variables["version"] = version.to_json()
+            else:
+                variables["version"] = version
+
+        if name is not None:
+            var_types["name"] = String
+            if hasattr(name, "to_json"):
+                variables["name"] = name.to_json()
+            else:
+                variables["name"] = name
+
+        if page is not None:
+            var_types["page"] = PaginationInput
+            if hasattr(page, "to_json"):
+                variables["page"] = page.to_json()
+            else:
+                variables["page"] = page
+
+        query = self.prepare(InferenceExecutionList__Required, "findInferenceExecutions", variables, var_types)
+        results = self.query(query, variables)
+        return InferenceExecutionList__Required.from_json(results.get("findInferenceExecutions"))
+
+    def searchInferenceExecutions(self, query: 'QueryExpression__Required'=None, page: 'PaginationInput'=None) -> InferenceExecutionList__Required:
         args = ["query: 'QueryExpression__Required'=None", "page: 'PaginationInput'=None"]
         variables = dict()
         var_types = dict()
@@ -1500,9 +1542,9 @@ class Query(QueryBase):
             else:
                 variables["page"] = page
 
-        query = self.prepare(InferenceExecutionList__Required, "findInferences", variables, var_types)
+        query = self.prepare(InferenceExecutionList__Required, "searchInferenceExecutions", variables, var_types)
         results = self.query(query, variables)
-        return InferenceExecutionList__Required.from_json(results.get("findInferences"))
+        return InferenceExecutionList__Required.from_json(results.get("searchInferenceExecutions"))
 
     def material(self, material_id: 'ID__Required'=None) -> Material__Required:
         args = ["material_id: 'ID__Required'=None"]
@@ -1812,6 +1854,22 @@ class Mutation(MutationBase):
         results = self.query(query, variables)
         return Layout.from_json(results.get("updateLayout"))
 
+    def createPerson(self, person: 'PersonInput'=None) -> Person:
+        args = ["person: 'PersonInput'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if person is not None:
+            var_types["person"] = PersonInput
+            if hasattr(person, "to_json"):
+                variables["person"] = person.to_json()
+            else:
+                variables["person"] = person
+
+        query = self.prepare(Person, "createPerson", variables, var_types)
+        results = self.query(query, variables)
+        return Person.from_json(results.get("createPerson"))
+
     def createDatapoint(self, datapoint: 'DatapointInput'=None) -> Datapoint:
         args = ["datapoint: 'DatapointInput'=None"]
         variables = dict()
@@ -1844,6 +1902,52 @@ class Mutation(MutationBase):
         results = self.query(query, variables)
         return DeleteStatusResponse.from_json(results.get("deleteDatapoint"))
 
+    def tagDatapoint(self, data_id: 'ID__Required'=None, tags: 'List[String__Required]'=None) -> Datapoint__Required:
+        args = ["data_id: 'ID__Required'=None", "tags: 'List[String__Required]'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if data_id is not None:
+            var_types["data_id"] = ID__Required
+            if hasattr(data_id, "to_json"):
+                variables["data_id"] = data_id.to_json()
+            else:
+                variables["data_id"] = data_id
+
+        if tags is not None:
+            var_types["tags"] = List[String__Required]
+            if hasattr(tags, "to_json"):
+                variables["tags"] = tags.to_json()
+            else:
+                variables["tags"] = tags
+
+        query = self.prepare(Datapoint__Required, "tagDatapoint", variables, var_types)
+        results = self.query(query, variables)
+        return Datapoint__Required.from_json(results.get("tagDatapoint"))
+
+    def untagDatapoint(self, data_id: 'ID__Required'=None, tags: 'List[String__Required]'=None) -> Datapoint__Required:
+        args = ["data_id: 'ID__Required'=None", "tags: 'List[String__Required]'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if data_id is not None:
+            var_types["data_id"] = ID__Required
+            if hasattr(data_id, "to_json"):
+                variables["data_id"] = data_id.to_json()
+            else:
+                variables["data_id"] = data_id
+
+        if tags is not None:
+            var_types["tags"] = List[String__Required]
+            if hasattr(tags, "to_json"):
+                variables["tags"] = tags.to_json()
+            else:
+                variables["tags"] = tags
+
+        query = self.prepare(Datapoint__Required, "untagDatapoint", variables, var_types)
+        results = self.query(query, variables)
+        return Datapoint__Required.from_json(results.get("untagDatapoint"))
+
     def createInferenceExecution(self, inference: 'InferenceExecutionInput'=None) -> InferenceExecution:
         args = ["inference: 'InferenceExecutionInput'=None"]
         variables = dict()
@@ -1859,6 +1963,38 @@ class Mutation(MutationBase):
         query = self.prepare(InferenceExecution, "createInferenceExecution", variables, var_types)
         results = self.query(query, variables)
         return InferenceExecution.from_json(results.get("createInferenceExecution"))
+
+    def updateInferenceExecution(self, inference_id: 'ID__Required'=None) -> InferenceExecution:
+        args = ["inference_id: 'ID__Required'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if inference_id is not None:
+            var_types["inference_id"] = ID__Required
+            if hasattr(inference_id, "to_json"):
+                variables["inference_id"] = inference_id.to_json()
+            else:
+                variables["inference_id"] = inference_id
+
+        query = self.prepare(InferenceExecution, "updateInferenceExecution", variables, var_types)
+        results = self.query(query, variables)
+        return InferenceExecution.from_json(results.get("updateInferenceExecution"))
+
+    def deleteInferenceExecution(self, inference_id: 'ID__Required'=None) -> DeleteStatusResponse:
+        args = ["inference_id: 'ID__Required'=None"]
+        variables = dict()
+        var_types = dict()
+
+        if inference_id is not None:
+            var_types["inference_id"] = ID__Required
+            if hasattr(inference_id, "to_json"):
+                variables["inference_id"] = inference_id.to_json()
+            else:
+                variables["inference_id"] = inference_id
+
+        query = self.prepare(DeleteStatusResponse, "deleteInferenceExecution", variables, var_types)
+        results = self.query(query, variables)
+        return DeleteStatusResponse.from_json(results.get("deleteInferenceExecution"))
 
     def createMaterial(self, material: 'MaterialInput'=None) -> Material:
         args = ["material: 'MaterialInput'=None"]
